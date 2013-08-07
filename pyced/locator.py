@@ -13,7 +13,14 @@ class Locator(object):
         print 'Created locator ', location
         self.location = [location]
         
+    # ----------------------------------------------------------------------- #
+        
     def append(self, location):
         ' Appends a new location to the locations list '
         self.location.append(location)
-        
+    
+    # ----------------------------------------------------------------------- #
+    
+    def copy(self):
+        ' Returns a deep copy of the locator '
+        pass

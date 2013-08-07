@@ -37,68 +37,103 @@ class Generator(object):
     
     def __init__(self, arg):
         ' Constructs a generator object '
-        print 'Created generator', self.__class__.__name__, '(', arg, ')'
+        pass
+    
+    # ----------------------------------------------------------------------- #
+    
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
         pass
     
 # =========================================================================== #    
     
 class Atom(Generator):
     ' Represents an atom radical '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class AtomReplace(Generator):
     ' Represents an atom replacer '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class Chain(Generator):
     ' Represetns an aliphatic chain '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class Ring(Generator):
     ' Represents an aliphatic cycle '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class Arene(Ring):
     ' Represents an arene '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class En(Generator):
     ' Represents a double bond replacer '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class In(Generator):
     ' Represents a triple bond replacer '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class Cis(Generator):
     ' Represents a cis-bond modifier '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class Trans(Generator):
     ' Represents a trans-bond modifier '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class Me(Chain):
     ' Represents a methyl radical '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
@@ -110,28 +145,46 @@ class Et(Chain):
 
 class Ph(Arene):
     ' Represents a phenyl radical '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class Nitro(Generator):
     ' Represents nitro-group '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class CarboxylicAcid(Generator):
     ' Represents carboxylic acid group '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class Nitrile(Generator):
     ' Represents nitrile group '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
 
 # =========================================================================== #
 
 class SulfonicAcid(Generator):
     ' Represents sulfonic acid '
-    pass
+
+    def create_molecular_graph(self):
+        ' Creates molecular graph '
+        pass
+
+
+
