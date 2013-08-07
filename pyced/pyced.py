@@ -4,13 +4,12 @@ Created on 30.04.2013
 '''
 
 import sys
-from PyQt4 import QtGui
+# from PyQt4 import QtGui
 
-from mainwindow import MainWindow
-from canvas import Canvas
+# from mainwindow import MainWindow
+#from canvas import Canvas
 from structure_source import *
 from token import *
-from canvas import Canvas
 
 from graph import Graph
 
@@ -27,20 +26,34 @@ def main():
     if token:
         print token.generator
 
-    g1 = Graph({1,2,3})
-    g1.connect(1, 2)
-    g1.connect(2, 3)
-    g1.connect(3, 1)
-    g1[4]={1, 2}
-    g1.set_trait(4, 'b')
-    g1.add_node(5, {2, 3}, 'a')
-    for n in g1:
-        node, trait = g1[n]
-        print(n, " - ", node, trait)
+    g = Graph({1: {2,3}, 2: {3,4}, 3: {4,5}, 4: {5,1}, 5: {1,2}})
+    show_graph(g)
+    g.set_node(6)
+    show_graph(g)
+    g.set_node(7, {1,3})
+    show_graph(g)
+    g.set_node(4, {1})
+    show_graph(g)
+    
+    g.del_node(1)
+    show_graph(g)
+    g.connect(6,7)
+    show_graph(g)
+    g.disconnect(3,5)
+    show_graph(g)
+    print g.get_connected_nodes(3)
+    
 
         
 #    sys.exit(app.exec_())
 
+def show_graph(g):
+    print '-' * 40
+    for n in g:
+        node = g[n]
+        print(n, " - ", node)
+        
+        
 if __name__ == '__main__':
     main()
     

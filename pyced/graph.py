@@ -8,74 +8,114 @@ Created on 06.08.2013
 class Graph(object):
     ' Represents a graph '
 
-    def __init__(self, nodes = set()):
-        ' Constructs a graph '
-        self.nodes = {node: set() for node in nodes}
-        self.traits = {}
-        
+    def __init__(self, graph = None):
+        ''' Constructs a graph 
+            @param graph: Graph object to copy or
+                          set {n1, n2, n3...} or
+                          dict {n1: {adj1}, n2: {adj2}..} '''
+        if isinstance(graph, Graph):
+            # copy given graph
+            self.nodes = {n: ajd.copy() for n, ajd in graph.nodes.items()}
+            self.build_edges_table()
+            self.fix_adjacency()
+        elif isinstance(graph, set):
+            # build from set of nodes
+            self.nodes = {}
+            self.edges = set()
+            self.add_disconnected_nodes(graph)
+        elif isinstance(graph, dict):
+            # build from dict representation of graph
+            self.nodes = {}
+            self.add_connected_nodes(graph)   
+    
     # ----------------------------------------------------------------------- #
-
-    def add_node(self, node, adj_list = set(), trait = None):
+    
+    def add_disconnected_nodes(self, nodes):
+        ''' Adds nodes to the graph.
+            @param nodes: set {n1, n2, n3...} '''
+        self.nodes.update(dict.fromkeys(nodes))
+     
+    # ----------------------------------------------------------------------- #
+    
+    def add_connected_nodes(self, nodes):
+        ''' Adds nodes to the graph.
+            @param nodes: dict {n1: {adj1}, n2: {adj2}..} '''
+        self.nodes.update(nodes)
+        self.build_edges_table()
+        self.fix_adjacency()
+    
+    # ----------------------------------------------------------------------- #
+    
+    def set_node(self, n, adj = set()):
         ' Adds node with adjacency list (optionally) to the graph '
-        self.nodes[node] = adj_list
-        if trait:
-            self.traits[node] = trait
-        for to_node in self.nodes:
-            if to_node in adj_list:
-                self.nodes[to_node].add(node)
+        cp_adj = adj.copy()
+        if n in self.nodes:
+            # remove edges to/from n
+            for bn in (self.nodes[n] - cp_adj):
+                self.disconnect(n, bn)
+        self.nodes[n] = cp_adj
+        for n2 in self.nodes:
+            if n2 in cp_adj:
+                self.nodes[n2].add(n)
+                self.edges.add(order_edge(n, n2))
+        self.clean()
         
-    # ----------------------------------------------------------------------- #
+    # ----------------------------------------------------------------------- #    
     
-    def set_trait(self, node, trait):
-        ' Sets trait for given node '
-        self.traits[node] = trait
-        
-    # ----------------------------------------------------------------------- #
-    
-    def del_node(self, node):
+    def del_node(self, n):
         ' Deletes the specified node '
-        del self.nodes[node]
-        if node in self.traits:
-            del self.traits[node]
-        
-    # ----------------------------------------------------------------------- #
+        if n in self.nodes:
+            del self.nodes[n]
+            self.clean()
+
+    # ----------------------------------------------------------------------- #    
     
-    def connect(self, from_node, to_node):
+    def connect(self, n1, n2):
         ' Connects from_node to to_node '
-        self.nodes[from_node].add(to_node)
-        self.nodes[to_node].add(from_node)
+        self.nodes[n1].add(n2)
+        self.nodes[n2].add(n1)
+        self.edges.add(order_edge(n1, n2))
         
     # ----------------------------------------------------------------------- #
     
-    def disconnect(self, from_node, to_node):
+    def disconnect(self, n1, n2):
         ' Break the link between from_node and to_node '
-        self.nodes[from_node].discard(to_node)
-        self.nodes[to_node].discard(from_node)
+        self.nodes[n1].discard(n2)
+        self.nodes[n2].discard(n1)
+        self.edges.discard(order_edge(n1, n2))
     
     # ----------------------------------------------------------------------- #
     
     def clean(self):
-        ' Removes links to non-existant nodes '
-        for _, to_nodes in self.nodes.items():
-            for to_node in set(to_nodes):
-                if to_node not in self.nodes:
-                    to_nodes.discard(to_node)
-        
-    # ----------------------------------------------------------------------- #
-    
-    def copy(self):
-        ' Returns a deep copy of the graph '
-        graph = Graph()
-        for node, ajd_set in self.nodes.items():
-            graph.nodes[node] = ajd_set.copy()
-        graph.traits = dict(self.traits)
-        return graph
+        ' Removes broken edges '
+        for n1, adj in self.nodes.items():
+            for n2 in set(adj):
+                if n2 not in self.nodes:
+                    adj.discard(n2)
+                    self.edges.discard(order_edge(n1, n2))
     
     # ----------------------------------------------------------------------- #
     
-    def get_connected_nodes(self, node):
+    def get_connected_nodes(self, n):
         ' Returns connected nodes set '
-        return self.nodes[node]
+        return self.nodes[n]
+    
+    # ----------------------------------------------------------------------- #
+    
+    def fix_adjacency(self):
+        ' Fix one-way edges based on correct edges table '
+        for n1, n2 in self.edges:
+            self.nodes[n1].add(n2)
+            self.nodes[n2].add(n1)                
+    
+    # ----------------------------------------------------------------------- #
+    
+    def build_edges_table(self):
+        ' Builds edges table based on the current adjacency list '
+        self.edges = {(n1, n2)                      
+                      for n1, adj in self.nodes.items()
+                      for n2 in adj
+                      if n1 < n2}    
     
     # ----------------------------------------------------------------------- #
     # Sequence interface
@@ -86,16 +126,13 @@ class Graph(object):
     
     # ----------------------------------------------------------------------- #
     
-    def __getitem__(self, node):
-        return self.nodes[node], self.traits.get(node, None)
+    def __getitem__(self, n):
+        return self.nodes[n]
     
     # ----------------------------------------------------------------------- #
     
-    def __setitem__(self, node, adj_list):
-        self.nodes[node] = adj_list
-        for to_node in self.nodes:
-            if to_node in adj_list:
-                self.nodes[to_node].add(node)
+    def __setitem__(self, n, adj):
+        self.set_node(n, adj)
                 
     # ----------------------------------------------------------------------- #
         
@@ -104,10 +141,10 @@ class Graph(object):
     
     # ----------------------------------------------------------------------- #
     
-    def __contains__(self, node):
-        return node in self.nodes
-    
-    
-    
-
+    def __contains__(self, n):
+        return n in self.nodes
         
+# =========================================================================== #
+
+def order_edge(n1, n2):
+    return (n1, n2) if n1 < n2 else n2, n1
