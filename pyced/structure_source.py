@@ -9,7 +9,7 @@ import re
 from locator import Locator
 from radical import Radical 
 from bond import Bond
-from generator import Generator, Atom, AtomReplace
+from generator import Generator, AtomConnect, AtomReplace
 from errors import StructureParseError
 
 class StructureSource(object):
@@ -124,7 +124,7 @@ class StructureSource(object):
             # generator can be element symbol
             element = self.read_element()
             if element:
-                return Atom(element)
+                return AtomConnect(element)
             else:
                 # generator can be element symbol in square brackets
                 if self.read_character('['):
@@ -140,7 +140,7 @@ class StructureSource(object):
         ' Tries to read a locator from the source text '
         number = self.read_number()
         if number:
-            locator = Locator(number)
+            locator = Locator([number])
             if self.read_character(','):
                 tail_locator = self.read_locator()
                 if tail_locator:

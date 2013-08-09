@@ -26,14 +26,17 @@ class Graph(object):
         elif isinstance(graph, dict):
             # build from dict representation of graph
             self.nodes = {}
-            self.add_connected_nodes(graph)   
+            self.add_connected_nodes(graph)
+        else:
+            print 'Incorrect input graph!!!'
+            print graph
     
     # ----------------------------------------------------------------------- #
     
     def add_disconnected_nodes(self, nodes):
         ''' Adds nodes to the graph.
             @param nodes: set {n1, n2, n3...} '''
-        self.nodes.update(dict.fromkeys(nodes))
+        self.nodes.update({n: set() for n in nodes})
      
     # ----------------------------------------------------------------------- #
     
@@ -147,4 +150,5 @@ class Graph(object):
 # =========================================================================== #
 
 def order_edge(n1, n2):
-    return (n1, n2) if n1 < n2 else n2, n1
+    return (n1, n2) if n1 < n2 else (n2, n1)
+         

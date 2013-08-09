@@ -5,12 +5,16 @@ Created on 19.05.2013
 @author: Alexey Bright
 '''
 
+from atom import Atom
+from element import E, Element
+from mol_graph import MolGraph
+
 class Generator(object):
     ' Represents a generator ' 
 
     @classmethod
     def create(cls, name, arg = None):
-        generators = {'atom'    : Atom,
+        generators = {'atom'    : AtomConnect,
                       'replace' : AtomReplace,
                       'chain'   : Chain,
                       'ring'    : Ring,
@@ -37,39 +41,46 @@ class Generator(object):
     
     def __init__(self, arg):
         ' Constructs a generator object '
-        pass
+        self.arg = arg
     
     # ----------------------------------------------------------------------- #
     
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
     
-# =========================================================================== #    
+# =========================================================================== #
+# Generator Subclasses                                                        #
+# =========================================================================== # 
     
-class Atom(Generator):
+class AtomConnect(Generator):
     ' Represents an atom radical '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
-        pass
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
+        for i in locator:
+            atom = Atom(E.get_element(self.arg), True)
+            ag = MolGraph({atom})
+            graph.attach(ag, graph.index[i], atom)
 
 # =========================================================================== #
 
 class AtomReplace(Generator):
     ' Represents an atom replacer '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
-        pass
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
+        atom = Atom(E.get_element(self.arg), self.arg != 'C')
+        ag = MolGraph({atom})
+        graph.replace(ag, locator)
 
 # =========================================================================== #
 
 class Chain(Generator):
     ' Represetns an aliphatic chain '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -77,8 +88,8 @@ class Chain(Generator):
 class Ring(Generator):
     ' Represents an aliphatic cycle '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -86,8 +97,8 @@ class Ring(Generator):
 class Arene(Ring):
     ' Represents an arene '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -95,8 +106,8 @@ class Arene(Ring):
 class En(Generator):
     ' Represents a double bond replacer '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -104,8 +115,8 @@ class En(Generator):
 class In(Generator):
     ' Represents a triple bond replacer '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -113,8 +124,8 @@ class In(Generator):
 class Cis(Generator):
     ' Represents a cis-bond modifier '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -122,8 +133,8 @@ class Cis(Generator):
 class Trans(Generator):
     ' Represents a trans-bond modifier '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -131,23 +142,27 @@ class Trans(Generator):
 class Me(Chain):
     ' Represents a methyl radical '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
 
 class Et(Chain):
     ' Represents an ethyl radical '
-    pass
+
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
+        pass
+
 
 # =========================================================================== #
 
 class Ph(Arene):
     ' Represents a phenyl radical '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -155,8 +170,8 @@ class Ph(Arene):
 class Nitro(Generator):
     ' Represents nitro-group '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -164,8 +179,8 @@ class Nitro(Generator):
 class CarboxylicAcid(Generator):
     ' Represents carboxylic acid group '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -173,8 +188,8 @@ class CarboxylicAcid(Generator):
 class Nitrile(Generator):
     ' Represents nitrile group '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 # =========================================================================== #
@@ -182,8 +197,8 @@ class Nitrile(Generator):
 class SulfonicAcid(Generator):
     ' Represents sulfonic acid '
 
-    def create_molecular_graph(self):
-        ' Creates molecular graph '
+    def apply(self, graph, locator):
+        ' Applies the generator to given graph using locator object '
         pass
 
 

@@ -6,7 +6,7 @@ Created on 18.05.2013
 '''
 
 from generator import Generator
-from graph import Graph
+from mol_graph import MolGraph
 
 class Radical(object):
     ' Represents a radical '
@@ -23,17 +23,16 @@ class Radical(object):
         self.bond = args.get('bond')
         
         # create molecular graph based on arguments
-        self.graph = Graph()
         if self.radical:
             # copy given radical
-            self.graph = self.radical.graph.copy()
+            self.graph = MolGraph(self.radical.graph)
             self.locator = self.radical.locator.copy()
         elif self.left_radical and self.right_radical and self.bond:
             # interconnect given radicals with the bond
             pass
         elif self.generator:
             # build a radical using given generator
-            pass
+            self.graph = MolGraph()
         
         
     # ----------------------------------------------------------------------- #
@@ -54,12 +53,7 @@ class Radical(object):
         ' Connects given graph to the current graph '
         pass
     
-    # ----------------------------------------------------------------------- #
-    
-    def canonicalize(self):
-        ' Canonicalizes the molecular graph '
-        pass
-    
+
     
     
     
