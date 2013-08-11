@@ -151,4 +151,3 @@ class Graph(object):
 
 def order_edge(n1, n2):
     return (n1, n2) if n1 < n2 else (n2, n1)
-         

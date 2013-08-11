@@ -6,7 +6,7 @@ Created on 19.05.2013
 '''
 
 from atom import Atom
-from element import E, Element
+from element import E
 from mol_graph import MolGraph
 
 class Generator(object):
@@ -14,7 +14,7 @@ class Generator(object):
 
     @classmethod
     def create(cls, name, arg = None):
-        generators = {'atom'    : AtomConnect,
+        generators = {'atom'    : AtomAttach,
                       'replace' : AtomReplace,
                       'chain'   : Chain,
                       'ring'    : Ring,
@@ -53,44 +53,62 @@ class Generator(object):
 # Generator Subclasses                                                        #
 # =========================================================================== # 
     
-class AtomConnect(Generator):
+class AtomAttach(Generator):
     ' Represents an atom radical '
 
-    def apply(self, graph, locator):
+    def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
-        for i in locator:
-            atom = Atom(E.get_element(self.arg), True)
-            ag = MolGraph({atom})
-            graph.attach(ag, graph.index[i], atom)
+        atom = Atom(E.get_element(self.arg), True)
+        ag = MolGraph({atom})
+        graph.attach(ag, graph.index[locant], atom)
 
 # =========================================================================== #
 
 class AtomReplace(Generator):
     ' Represents an atom replacer '
 
-    def apply(self, graph, locator):
+    def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
         atom = Atom(E.get_element(self.arg), self.arg != 'C')
-        ag = MolGraph({atom})
-        graph.replace(ag, locator)
+        graph.replace(graph.index[locant], atom)
 
 # =========================================================================== #
 
 class Chain(Generator):
     ' Represetns an aliphatic chain '
 
-    def apply(self, graph, locator):
+    def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
-        pass
+        prev_atom = Atom(E.C, index = 0)
+        adic = {prev_atom: set()}
+        for i in range(1, int(self.arg)):
+            atom = Atom(E.C, index = i)
+            adic[prev_atom].add(atom)
+            adic[atom] = {prev_atom}
+            prev_atom = atom            
+        ag = MolGraph(adic)
+        graph.attach(ag, graph.index[locant], ag.index[0])
 
 # =========================================================================== #
 
 class Ring(Generator):
     ' Represents an aliphatic cycle '
 
-    def apply(self, graph, locator):
+    def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
-        pass
+        prev_atom = Atom(E.C, index = 0)
+        adic = {prev_atom: set()}
+        for i in range(1, int(self.arg)):
+            atom = Atom(E.C, index = i)
+            adic[prev_atom].add(atom)
+            adic[atom] = {prev_atom}
+            prev_atom = atom
+        # TODO exclude repeating code for this, Chain and Arene
+        # TODO exclude repeating loops for locant
+        ag = MolGraph(adic)
+        ag.connect(ag.index[0], ag.index[-1])
+        graph.attach(ag, graph.index[locant], ag.index[0])
+
 
 # =========================================================================== #
 

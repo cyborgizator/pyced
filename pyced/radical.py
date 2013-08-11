@@ -5,7 +5,6 @@ Created on 18.05.2013
 @author: Alexey Bright
 '''
 
-from generator import Generator
 from mol_graph import MolGraph
 
 class Radical(object):

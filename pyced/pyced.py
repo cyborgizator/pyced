@@ -3,18 +3,19 @@ Created on 30.04.2013
 @author: Alexey Bright
 '''
 
-import sys
+#import sys
 # from PyQt4 import QtGui
 
 # from mainwindow import MainWindow
 #from canvas import Canvas
-from structure_source import *
-from token import *
+#from structure_source import *
+#from token import *
 
 from atom import Atom
 from mol_graph import MolGraph
-from element import Element, E
+from generator import Generator
 from locator import Locator
+from element import E
 
 def main():
 #    app = QtGui.QApplication(sys.argv)
@@ -32,8 +33,21 @@ def main():
     o = Atom(E.O, index = 2)
     mg = MolGraph({c1:{c2}, c2:{c1,o}, o:{c2}})
     g = Generator.create('atom', 'Br')
-    g.apply(mg, Locator([1, 1, 1]))
+    Locator([1, 1, 1]).apply_generator(mg, g)
     mg.show()
+    print '-' * 80
+    g = Generator.create('replace', 'I')
+    Locator([5, 6]).apply_generator(mg, g)
+    mg.show()
+    print '-' * 80
+    g = Generator.create('ring', 5)
+    Locator([2, 2]).apply_generator(mg, g)
+    mg.show()
+    print mg.get_brutto_formula()
+
+    
+    
+    
     
 #    sys.exit(app.exec_())
         

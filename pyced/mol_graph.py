@@ -6,7 +6,7 @@ Created on 07.08.2013
 '''
 
 from collections import OrderedDict
-from element import E, Element
+from element import E
 from graph import Graph
 
 class MolGraph(Graph):
@@ -30,8 +30,15 @@ class MolGraph(Graph):
     
     # ----------------------------------------------------------------------- #
     
+    def shift_indices(self, d):
+        ' Shift indices by d '
+        for a in self.nodes:
+            a.index += d    
+    
+    # ----------------------------------------------------------------------- #
+    
     def attach(self, graph, node1, node2):
-        ' Connects given graph using locator '
+        ' Attaches graph via bond between node1 and node2 '
         graph.shift_indices(len(self.nodes))
         self.add_connected_nodes(graph.nodes)
         self.connect(node1, node2)
@@ -39,24 +46,25 @@ class MolGraph(Graph):
     
     # ----------------------------------------------------------------------- #
     
-    def shift_indices(self, d):
-        ' Shift indices by d '
-        for a in self.nodes:
-            a.index += d
-    
-    # ----------------------------------------------------------------------- #
-    
-    def replace(self, node, locator):
-        ' Replace graph node using locator '
-        pass
+    def replace(self, node1, node2):
+        ' Replace graph node1 with node2 '
+        self.nodes[node2] = self.nodes[node1]
+        for n in self.nodes[node1]:
+            self.nodes[n].discard(node1)
+            self.nodes[n].add(node2)
+        node2.index = node1.index
+        self.index[node1.index] = node2
+        del self.nodes[node1]
     
     # ----------------------------------------------------------------------- #
     
     def get_brutto_formula(self):
         ' Returns brutto formula for the molecular graph '
-        print 'Modified:', self.modified
+        
+        def m_ind(i):
+            return str(i) if i > 1 else ''
+        
         if self.modified:
-            # calculate brutto formula
             C_count = 0
             H_count = 0
             other_counts = OrderedDict()
@@ -70,9 +78,9 @@ class MolGraph(Graph):
                         other_counts[a.element.symbol] += 1
                     else:
                         other_counts[a.element.symbol] = 1
-            C_part = 'C' + str(C_count) if C_count > 0 else ''
-            H_part = 'H' + str(H_count) if H_count > 0 else ''
-            others = reduce(lambda b, (e, c): b + e + str(c),
+            C_part = 'C' + m_ind(C_count) if C_count > 0 else ''
+            H_part = 'H' + m_ind(H_count) if H_count > 0 else ''
+            others = reduce(lambda b, (e, c): b + e + m_ind(c),
                             other_counts.items(),
                             '')
             self.brutto_formula = C_part + H_part + others

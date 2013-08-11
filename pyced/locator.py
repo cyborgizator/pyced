@@ -8,40 +8,49 @@ Created on 18.05.2013
 class Locator(object):
     ' Represents a locator '
 
-    def __init__(self, locations = []):
+    def __init__(self, locants = []):
         ' Constructs a locator '
-        self.locations = [x - 1 for x in locations]
+        self.locants = [x - 1 for x in locants]
         
     # ----------------------------------------------------------------------- #
         
     def append(self, location):
         ' Appends a new location to the locations list '
-        self.locations.append(location)
+        self.locants.append(location)
+    
+    # ----------------------------------------------------------------------- #
+    
+    def apply_generator(self, graph, generator):
+        ' For each locant applies given generator to the molecular graph '
+        for locant in self.locants:
+            generator.apply(graph, locant)
     
     # ----------------------------------------------------------------------- #
     
     def copy(self):
         ' Returns a deep copy of the locator '
-        locator = Locator(self.locations)
+        locator = Locator(self.locants)
+        return locator
 
     # ----------------------------------------------------------------------- #
     # Sequence interface
     # ----------------------------------------------------------------------- #
     
     def __len__(self):
-        return len(self.locations)
+        return len(self.locants)
     
     # ----------------------------------------------------------------------- #
     
     def __getitem__(self, index):
-        return self.locations[index]
+        return self.locants[index]
     
     # ----------------------------------------------------------------------- #
         
     def __iter__(self):
-        return iter(self.locations)
+        return iter(self.locants)
     
     # ----------------------------------------------------------------------- #
     
-    def __contains__(self, location):
-        return location in self.locations    
+    def __contains__(self, locant):
+        return locant in self.locants    
+    
