@@ -9,7 +9,11 @@ class Bond(object):
     ' Represents a chemical bond '
 
     @classmethod
-    def create(cls, symbol):
+    def create(cls, symbol, atom1, atom2):
+        ''' Creates a bond based on given bond symbol
+            @param symbol: is the symbol of bond ('-' single, '=' double etc)
+            @param atom1: first bonded atom
+            @param atom2: second bonded atom '''  
         bond_types = {'-':  SingleBond,
                       '=':  DoubleBond,
                       '#':  TripleBond,
@@ -19,13 +23,13 @@ class Bond(object):
                       '-+': ReversedPolarBond}        
         if symbol in bond_types:
             return bond_types[symbol]()
-        
+    
     # ----------------------------------------------------------------------- #
 
-    def __init__(self):
+    def __init__(self, atom1, atom2):
         ' Constructs a chemical bond '
-        print 'Created bond ', self.__class__.__name__
-        pass
+        self.atom1 = atom1
+        self.atom2 = atom2
         
     # ----------------------------------------------------------------------- #
     

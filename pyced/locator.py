@@ -29,7 +29,8 @@ class Locator(object):
     
     def copy(self):
         ' Returns a deep copy of the locator '
-        locator = Locator(self.locants)
+        locator = Locator()
+        locator.locants = self.locants
         return locator
 
     # ----------------------------------------------------------------------- #

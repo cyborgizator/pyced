@@ -7,16 +7,16 @@ Created on 07.08.2013
 
 from collections import OrderedDict
 from element import E
-from graph import Graph
+from graph import Graph, order_edge
 
 class MolGraph(Graph):
     ' Represents a molecular graph '
     
     def __init__(self, graph = None):
-        ''' Constructs a graph 
+        ''' Constructs a graph
             @param graph: Graph object to copy or
-                          set {n1, n2, n3...} or
-                          dict {n1: {adj1}, n2: {adj2}..} '''
+                          set {n1, n2, n3...) or
+                          dict {(n1, n2): e1, (n3, n4): e2... ''' 
         super(self.__class__, self).__init__(graph)
         self.build_index()
         self.brutto_formula = ''
@@ -40,7 +40,9 @@ class MolGraph(Graph):
     def attach(self, graph, node1, node2):
         ' Attaches graph via bond between node1 and node2 '
         graph.shift_indices(len(self.nodes))
-        self.add_connected_nodes(graph.nodes)
+        self.add_edges(graph.edges)
+        if node2 not in self.nodes:
+            self.nodes[node2] = set()
         self.connect(node1, node2)
         self.index.extend(graph.index)
     
@@ -52,6 +54,10 @@ class MolGraph(Graph):
         for n in self.nodes[node1]:
             self.nodes[n].discard(node1)
             self.nodes[n].add(node2)
+            k = order_edge(n, node1)
+            e = self.edges[k]
+            del self.edges[k]
+            self.edges[order_edge(n, node2)] = e
         node2.index = node1.index
         self.index[node1.index] = node2
         del self.nodes[node1]

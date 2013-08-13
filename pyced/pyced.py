@@ -16,6 +16,7 @@ from mol_graph import MolGraph
 from generator import Generator
 from locator import Locator
 from element import E
+from bond import SingleBond
 
 def main():
 #    app = QtGui.QApplication(sys.argv)
@@ -31,23 +32,31 @@ def main():
     
     c1, c2 = Atom(E.C, index = 0), Atom(E.C, index = 1)
     o = Atom(E.O, index = 2)
-    mg = MolGraph({c1:{c2}, c2:{c1,o}, o:{c2}})
+    mg = MolGraph({(c1, c2): SingleBond(c1, c2), (c2, o): SingleBond(c2, o)})
     g = Generator.create('atom', 'Br')
     Locator([1, 1, 1]).apply_generator(mg, g)
     mg.show()
+    
     print '-' * 80
     g = Generator.create('replace', 'I')
     Locator([5, 6]).apply_generator(mg, g)
     mg.show()
+    
+    print '-' * 80
+    g = Generator.create('replace', 'Se')
+    Locator([3]).apply_generator(mg, g)
+    mg.show()    
+    
+    print '-' * 80
+    g = Generator.create('chain', 4)
+    Locator([2]).apply_generator(mg, g)
+    mg.show()
+
     print '-' * 80
     g = Generator.create('ring', 5)
-    Locator([2, 2]).apply_generator(mg, g)
+    Locator([2]).apply_generator(mg, g)
     mg.show()
     print mg.get_brutto_formula()
-
-    
-    
-    
     
 #    sys.exit(app.exec_())
         

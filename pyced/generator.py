@@ -7,54 +7,50 @@ Created on 19.05.2013
 
 from atom import Atom
 from element import E
-from mol_graph import MolGraph
+from bond import SingleBond
+from mol_graph import MolGraph, order_edge
 
 class Generator(object):
     ' Represents a generator ' 
 
     @classmethod
     def create(cls, name, arg = None):
-        generators = {'atom'    : AtomAttach,
-                      'replace' : AtomReplace,
-                      'chain'   : Chain,
-                      'ring'    : Ring,
-                      'o'       : Ring,
-                      'arene'   : Arene,
-                      'ar'      : Arene,
-                      'en'      : En,
-                      'in'      : In,
-                      'cis'     : Cis,
-                      'trans'   : Trans,
-                      'ch3'     : Me,
-                      'me'      : Me,
-                      'c2h5'    : Et,
-                      'et'      : Et,
-                      'ph'      : Ph,
-                      'no2'     : Nitro,
-                      'cooh'    : CarboxylicAcid,
-                      'cn'      : Nitrile,
-                      'so3h'    : SulfonicAcid}
-        if name in generators:
-            return generators[name](arg)
+        if name in cls.generators:
+            return cls.generators[name](arg)
 
     # ----------------------------------------------------------------------- #
     
+    @classmethod
+    def map_generators(cls, scope):
+        ''' Maps all generators in the current scope '''
+        cls.generators = {}
+        for name, cls_object in scope.items():
+            if  isinstance(cls_object, type) and\
+                issubclass(cls_object, cls) and\
+                cls_object is not cls:
+                for name in cls_object.names:
+                    cls.generators[name] = cls_object                
+
+    # ----------------------------------------------------------------------- #
+
     def __init__(self, arg):
         ' Constructs a generator object '
         self.arg = arg
-    
+
     # ----------------------------------------------------------------------- #
-    
+
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
         pass
-    
+
 # =========================================================================== #
 # Generator Subclasses                                                        #
-# =========================================================================== # 
-    
+# =========================================================================== #
+
 class AtomAttach(Generator):
     ' Represents an atom radical '
+
+    names = {'atom'}
 
     def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
@@ -67,6 +63,8 @@ class AtomAttach(Generator):
 class AtomReplace(Generator):
     ' Represents an atom replacer '
 
+    names = {'replace'}
+
     def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
         atom = Atom(E.get_element(self.arg), self.arg != 'C')
@@ -77,43 +75,46 @@ class AtomReplace(Generator):
 class Chain(Generator):
     ' Represetns an aliphatic chain '
 
+    names = {'chain'}
+
     def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
         prev_atom = Atom(E.C, index = 0)
-        adic = {prev_atom: set()}
+        bdic = {}
         for i in range(1, int(self.arg)):
             atom = Atom(E.C, index = i)
-            adic[prev_atom].add(atom)
-            adic[atom] = {prev_atom}
-            prev_atom = atom            
-        ag = MolGraph(adic)
+            bdic[order_edge(prev_atom, atom)] = SingleBond(prev_atom, atom)
+            prev_atom = atom
+        ag = MolGraph(bdic)
         graph.attach(ag, graph.index[locant], ag.index[0])
+        
 
 # =========================================================================== #
 
 class Ring(Generator):
     ' Represents an aliphatic cycle '
 
+    names = {'ring', 'o'}
+
     def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
         prev_atom = Atom(E.C, index = 0)
-        adic = {prev_atom: set()}
+        bdic = {}
         for i in range(1, int(self.arg)):
             atom = Atom(E.C, index = i)
-            adic[prev_atom].add(atom)
-            adic[atom] = {prev_atom}
+            bdic[order_edge(prev_atom, atom)] = SingleBond(prev_atom, atom)
             prev_atom = atom
-        # TODO exclude repeating code for this, Chain and Arene
-        # TODO exclude repeating loops for locant
-        ag = MolGraph(adic)
+        ag = MolGraph(bdic)
         ag.connect(ag.index[0], ag.index[-1])
         graph.attach(ag, graph.index[locant], ag.index[0])
-
+        # TODO exclude repeating code for this, Chain and Arene
 
 # =========================================================================== #
 
 class Arene(Ring):
     ' Represents an arene '
+
+    names = {'arene', 'ar'}
 
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
@@ -124,6 +125,8 @@ class Arene(Ring):
 class En(Generator):
     ' Represents a double bond replacer '
 
+    names = {'en'}
+
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
         pass
@@ -132,6 +135,8 @@ class En(Generator):
 
 class In(Generator):
     ' Represents a triple bond replacer '
+
+    names = {'in'}
 
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
@@ -142,6 +147,8 @@ class In(Generator):
 class Cis(Generator):
     ' Represents a cis-bond modifier '
 
+    names = {'cis'}
+
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
         pass
@@ -150,6 +157,8 @@ class Cis(Generator):
 
 class Trans(Generator):
     ' Represents a trans-bond modifier '
+
+    names = {'trans'}
 
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
@@ -160,6 +169,8 @@ class Trans(Generator):
 class Me(Chain):
     ' Represents a methyl radical '
 
+    names = {'me', 'ch3'}
+
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
         pass
@@ -168,6 +179,8 @@ class Me(Chain):
 
 class Et(Chain):
     ' Represents an ethyl radical '
+
+    names = {'et', 'c2h5'}
 
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
@@ -179,6 +192,8 @@ class Et(Chain):
 class Ph(Arene):
     ' Represents a phenyl radical '
 
+    names = {'ph', 'c6h5'}
+
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
         pass
@@ -187,6 +202,8 @@ class Ph(Arene):
 
 class Nitro(Generator):
     ' Represents nitro-group '
+
+    names = {'no2'}
 
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
@@ -197,6 +214,8 @@ class Nitro(Generator):
 class CarboxylicAcid(Generator):
     ' Represents carboxylic acid group '
 
+    names = {'cooh'}
+
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
         pass
@@ -205,6 +224,8 @@ class CarboxylicAcid(Generator):
 
 class Nitrile(Generator):
     ' Represents nitrile group '
+
+    names = {'cn'}
 
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
@@ -215,9 +236,13 @@ class Nitrile(Generator):
 class SulfonicAcid(Generator):
     ' Represents sulfonic acid '
 
+    names = {'so3h'}
+
     def apply(self, graph, locator):
         ' Applies the generator to given graph using locator object '
         pass
 
+# =========================================================================== #
 
+Generator.map_generators(vars())
 

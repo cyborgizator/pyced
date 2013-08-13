@@ -9,27 +9,30 @@ class Graph(object):
     ' Represents a graph '
 
     def __init__(self, graph = None):
-        ''' Constructs a graph 
+        ''' Constructs a graph
             @param graph: Graph object to copy or
-                          set {n1, n2, n3...} or
-                          dict {n1: {adj1}, n2: {adj2}..} '''
+                          set {n1, n2, n3...) or
+                          dict {(n1, n2): e1, (n3, n4): e2... ''' 
         if isinstance(graph, Graph):
             # copy given graph
-            self.nodes = {n: ajd.copy() for n, ajd in graph.nodes.items()}
-            self.build_edges_table()
-            self.fix_adjacency()
+            self.nodes = {n: adj.copy() for n, adj in graph.nodes.items()}
+            self.edges = {(n1, n2): e for (n1, n2), e in graph.edges.items()}
+            
         elif isinstance(graph, set):
             # build from set of nodes
             self.nodes = {}
-            self.edges = set()
+            self.edges = {}
             self.add_disconnected_nodes(graph)
+            
         elif isinstance(graph, dict):
-            # build from dict representation of graph
+            # build from edges dict
             self.nodes = {}
-            self.add_connected_nodes(graph)
+            self.edges = {}
+            self.add_edges(graph)
+            
         else:
             print 'Incorrect input graph!!!'
-            print graph
+            print graph            
     
     # ----------------------------------------------------------------------- #
     
@@ -44,12 +47,31 @@ class Graph(object):
         ''' Adds nodes to the graph.
             @param nodes: dict {n1: {adj1}, n2: {adj2}..} '''
         self.nodes.update(nodes)
-        self.build_edges_table()
-        self.fix_adjacency()
+        for n1, adj in nodes.items():
+            for n2 in adj:
+                k = order_edge(n1, n2)
+                if not self.edges.has_key(k):
+                    self.edges[k] = None
     
     # ----------------------------------------------------------------------- #
     
-    def set_node(self, n, adj = set()):
+    def add_edges(self, edges):
+        ''' Adds edges to the graph
+            @param edges: dict {(n1, n2): e} '''
+        for (n1, n2), e in edges.items():
+            if self.nodes.has_key(n1):
+                self.nodes[n1].add(n2)
+            else:
+                self.nodes[n1] = {n2}
+            if self.nodes.has_key(n2):
+                self.nodes[n2].add(n1)
+            else:
+                self.nodes[n2] = {n1}
+            self.edges[order_edge(n1, n2)] = e
+    
+    # ----------------------------------------------------------------------- #
+    
+    def set_node(self, n, adj = set(), edge = None):
         ' Adds node with adjacency list (optionally) to the graph '
         cp_adj = adj.copy()
         if n in self.nodes:
@@ -60,7 +82,7 @@ class Graph(object):
         for n2 in self.nodes:
             if n2 in cp_adj:
                 self.nodes[n2].add(n)
-                self.edges.add(order_edge(n, n2))
+                self.edges[order_edge(n, n2)] = edge
         self.clean()
         
     # ----------------------------------------------------------------------- #    
@@ -73,11 +95,11 @@ class Graph(object):
 
     # ----------------------------------------------------------------------- #    
     
-    def connect(self, n1, n2):
+    def connect(self, n1, n2, edge = None):
         ' Connects from_node to to_node '
         self.nodes[n1].add(n2)
         self.nodes[n2].add(n1)
-        self.edges.add(order_edge(n1, n2))
+        self.edges[order_edge(n1, n2)] = edge
         
     # ----------------------------------------------------------------------- #
     
@@ -85,7 +107,7 @@ class Graph(object):
         ' Break the link between from_node and to_node '
         self.nodes[n1].discard(n2)
         self.nodes[n2].discard(n1)
-        self.edges.discard(order_edge(n1, n2))
+        del self.edges[order_edge(n1, n2)]
     
     # ----------------------------------------------------------------------- #
     
@@ -95,7 +117,7 @@ class Graph(object):
             for n2 in set(adj):
                 if n2 not in self.nodes:
                     adj.discard(n2)
-                    self.edges.discard(order_edge(n1, n2))
+                    del self.edges[order_edge(n1, n2)]
     
     # ----------------------------------------------------------------------- #
     
@@ -115,7 +137,7 @@ class Graph(object):
     
     def build_edges_table(self):
         ' Builds edges table based on the current adjacency list '
-        self.edges = {(n1, n2)                      
+        self.edges = {(n1, n2): None                 
                       for n1, adj in self.nodes.items()
                       for n2 in adj
                       if n1 < n2}    
