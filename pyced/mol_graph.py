@@ -120,3 +120,9 @@ class MolGraph(Graph):
             symbol = self.index[a].element.symbol
             bounds = [x.element.symbol+'(%d)'%(x.index+1) for x in self.get_connected_nodes(self.index[a])]
             print a + 1, '\t-\t', self.index[a].element.symbol, bounds
+
+        for (a1, a2), e in self.edges.items():
+            print '(%d, %d)' % (a1.index + 1, a2.index + 1), e
+            
+        # TODO Fix edges!!!
+

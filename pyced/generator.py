@@ -7,7 +7,7 @@ Created on 19.05.2013
 
 from atom import Atom
 from element import E
-from bond import SingleBond
+from bond import SingleBond, PiBond
 from mol_graph import MolGraph, order_edge
 
 class Generator(object):
@@ -19,7 +19,7 @@ class Generator(object):
             return cls.generators[name](arg)
 
     # ----------------------------------------------------------------------- #
-    
+
     @classmethod
     def map_generators(cls, scope):
         ''' Maps all generators in the current scope '''
@@ -95,14 +95,16 @@ class Ring(Generator):
     ' Represents an aliphatic cycle '
 
     names = {'ring', 'o'}
+    bond_type = SingleBond
 
     def apply(self, graph, locant):
         ' Applies the generator to given graph using locator object '
+        bt = self.__class__.bond_type
         prev_atom = Atom(E.C, index = 0)
         bdic = {}
         for i in range(1, int(self.arg)):
             atom = Atom(E.C, index = i)
-            bdic[order_edge(prev_atom, atom)] = SingleBond(prev_atom, atom)
+            bdic[order_edge(prev_atom, atom)] = bt(prev_atom, atom)
             prev_atom = atom
         ag = MolGraph(bdic)
         ag.connect(ag.index[0], ag.index[-1])
@@ -115,10 +117,15 @@ class Arene(Ring):
     ' Represents an arene '
 
     names = {'arene', 'ar'}
+    bond_type = PiBond
 
-    def apply(self, graph, locator):
-        ' Applies the generator to given graph using locator object '
-        pass
+#    def apply(self, graph, locator):
+#        ' Applies the generator to given graph using locator object '
+#        
+#        
+#        
+#        
+#        pass
 
 # =========================================================================== #
 

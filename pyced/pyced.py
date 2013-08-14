@@ -53,9 +53,10 @@ def main():
     mg.show()
 
     print '-' * 80
-    g = Generator.create('ring', 5)
+    g = Generator.create('ar', 6)
     Locator([2]).apply_generator(mg, g)
     mg.show()
+
     print mg.get_brutto_formula()
     
 #    sys.exit(app.exec_())
