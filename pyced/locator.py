@@ -14,16 +14,10 @@ class Locator(object):
         
     # ----------------------------------------------------------------------- #
         
-    def append(self, location):
-        ' Appends a new location to the locations list '
-        self.locants.append(location)
-    
-    # ----------------------------------------------------------------------- #
-    
-    def apply_generator(self, graph, generator):
-        ' For each locant applies given generator to the molecular graph '
-        for locant in self.locants:
-            generator.apply(graph, locant)
+    def append(self, locations):
+        ' Appends a new locations to the locations list '
+        for location in locations:
+            self.locants.append(location)
     
     # ----------------------------------------------------------------------- #
     

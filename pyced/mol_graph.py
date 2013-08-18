@@ -7,6 +7,7 @@ Created on 07.08.2013
 
 from collections import OrderedDict
 from element import E
+from atom import Atom
 from graph import Graph, order_edge
 
 class MolGraph(Graph):
@@ -37,13 +38,13 @@ class MolGraph(Graph):
     
     # ----------------------------------------------------------------------- #
     
-    def attach(self, graph, node1, node2):
+    def attach(self, graph, node1, node2, bond_type = None):
         ' Attaches graph via bond between node1 and node2 '
         graph.shift_indices(len(self.nodes))
         self.add_edges(graph.edges)
         if node2 not in self.nodes:
             self.nodes[node2] = set()
-        self.connect(node1, node2)
+        self.connect(node1, node2, bond_type(node1, node2))
         self.index.extend(graph.index)
     
     # ----------------------------------------------------------------------- #
@@ -90,7 +91,7 @@ class MolGraph(Graph):
                             other_counts.items(),
                             '')
             self.brutto_formula = C_part + H_part + others
-            self.finish()
+            self.modified = False
         return self.brutto_formula
     
     # ----------------------------------------------------------------------- #
@@ -103,26 +104,22 @@ class MolGraph(Graph):
     
     # ----------------------------------------------------------------------- #
     
-    def modify(self):
-        ' Mark the graph as modified '
+    def modify(self, locator, modifier):
+        ' For each locant applies given modifier to the molecular graph '
+        for locant in locator.locants:
+            modifier.apply(self, locant)
         self.modified = True
-        
-    # ----------------------------------------------------------------------- #
-    
-    def finish(self):
-        ' Mark the graph as unmodified '
-        self.modified = False
     
     # ----------------------------------------------------------------------- #
     
     def show(self):
         for a in range(0, len(self.index)):
-            symbol = self.index[a].element.symbol
-            bounds = [x.element.symbol+'(%d)'%(x.index+1) for x in self.get_connected_nodes(self.index[a])]
-            print a + 1, '\t-\t', self.index[a].element.symbol, bounds
+            atom = self.index[a]
+            symbol = atom.element.symbol
+            bounds = [x.element.symbol+'(%d)'%(x.index+1) for x in self.get_connected_nodes(atom)]
+            print a + 1, '\t-\t', atom.element.symbol, bounds, '\t\tring' if atom.ring else '\t\tchain'
 
         for (a1, a2), e in self.edges.items():
-            print '(%d, %d)' % (a1.index + 1, a2.index + 1), e
-            
-        # TODO Fix edges!!!
+            label = '\t\tring' if a1.ring and a2.ring else '\t\tchain'
+            print '(%d, %d)' % (a1.index + 1, a2.index + 1), e, label
 

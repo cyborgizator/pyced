@@ -7,9 +7,12 @@ Created on 01.05.2013
 
 import re
 from locator import Locator
-from radical import Radical 
+from radical import Radical
+from atom import Atom
 from bond import Bond
-from generator import Generator, AtomConnect, AtomReplace
+from generator import Generator
+from modifier import Modifier, Replace
+from element import E
 from errors import StructureParseError
 
 class StructureSource(object):
@@ -64,55 +67,72 @@ class StructureSource(object):
     
     # ----------------------------------------------------------------------- #
     
-    def read_structure(self):
-        ' Tries to read a structure from the source text (?) '
-        # structure may be a radical
-        return self.read_radical()
-    
-    # ----------------------------------------------------------------------- #
-    
+    # B := - | = | # | +- | -+ | ~ | -- | :
     def read_bond(self):
         ' Tries to read a bond from the source text '
         token_text = self.read_regex(r'-|=|#|\+-|-\+|~|--|:')
-        return Bond.create(token_text) if token_text else False
-    
+        return Bond.get(token_text) if token_text else False
+            
     # ----------------------------------------------------------------------- #
-    
+            
+    # R := \(R\) | GR'
     def read_radical(self):
         ' Tries to read a radical from the source text '
+        
+        def flatten_rs(radical, rs):
+            ' Recursively applies R`-tuple to the radical '
+            if (len(rs) == 2):
+                locator, rsi = rs
+                radical.set_locator(locator)
+                flatten_rs(radical, rsi)
+            elif (len(rs) == 3):
+                bond, generator, rsi = rs
+                radical.attach(generator, bond)
+                flatten_rs(radical, rsi)
+        
         radical = False
-        # radical may be a generator
-        generator = self.read_generator()
-        if generator:
-            radical = Radical(generator = generator)
-        # radical may be bracketed radical
-        elif self.read_character('('):
+        # radical may be bracketed
+        if self.read_character('('):
             radical = self.read_radical()
             if not(radical and self.read_character(')')):
                 raise StructureParseError
-        else:
-            return False
-        # radical may be followed by a locator prefixed by '-'
-        dash = self.read_character('-')
-        if dash:
-            locator = self.read_locator()
-            if locator:
-                radical.set_locator(locator)
-            # radical may be followed by a chemical bond and a radical
-            bond = self.read_bond()
-            if bond:
-                new_radical = self.read_radical()
-                radical.add_radical(bond, new_radical)
+        # radical may be generator with following R'-expression
+        generator = self.read_generator()
+        if generator:
+            radical = Radical.build_from_generator(generator)
+            rs = self.read_rs()
+            flatten_rs(radical, rs)
         return radical
             
     # ----------------------------------------------------------------------- #
     
+    # R' := LR' | BGR' | B(GR') | e
+    def read_rs(self):
+        ' Tries to read a R`-expression from the source text '
+        # R' may be locator with following R'-expression
+        locator = self.read_locator()
+        if locator:
+            return (locator, self.read_rs())
+        # R' may be bond with following generator and R'-expression
+        bond = self.read_bond()
+        if bond:
+            # TODO insert optional brackets processing
+            generator = self.read_generator()
+            if generator:
+                return (bond, generator, self.read_rs())
+        return ()
+    
+    # TODO process B(GR')
+            
+    # ----------------------------------------------------------------------- #
+    
+    # G := Id\[N\] | E | Id
     def read_generator(self):
         ' Tries to read a generator from the source text '
-        # generator may be ID
-        gid = self.read_id()
+        # generator may be Id (including element symbol)
+        gid = self.read_Id()
         if gid:
-            # after generator ID may be argument in square brackets
+            # after generator Id may be argument in square brackets
             if self.read_character('['):
                 argument = self.read_number()
                 if argument and self.read_character(']'):
@@ -120,39 +140,48 @@ class StructureSource(object):
                 raise StructureParseError
             else:
                 return Generator.create(gid)
-        else:
-            # generator can be element symbol
-            element = self.read_element()
-            if element:
-                return AtomConnect(element)
-            else:
-                # generator can be element symbol in square brackets
-                if self.read_character('['):
-                    element = self.read_element()
-                    if element and self.read_character(']'):
-                        return AtomReplace(element)
-                    raise StructureParseError
         return False
     
     # ----------------------------------------------------------------------- #
     
+    # M := id | \[E\]
+    def read_modifier(self):
+        ' tries to read a modifier from the source text '
+        # modifier may be id
+        mid = self.read_id()
+        if mid:
+            return Modifier.create(mid)
+        elif self.read_character('['):
+            # modifier may be element symbol in square brackets
+            element = self.read_element()
+            if element and self.read_character(']'):
+                return Replace(Atom(E.get_element(element)))
+            raise StructureParseError
+        return False
+            
+    # ----------------------------------------------------------------------- #
+    
+    # L := N | L,N
     def read_locator(self):
         ' Tries to read a locator from the source text '
+        original_pos = self.pos
+        self.read_character('-')
         number = self.read_number()
         if number:
-            locator = Locator([number])
+            locator = Locator([int(number)])
             if self.read_character(','):
                 tail_locator = self.read_locator()
                 if tail_locator:
                     locator.append(tail_locator)
             return locator
+        self.pos = original_pos
         return False
     
     # ----------------------------------------------------------------------- #
     
     def read_element(self):
         ' Tries to read an element from the source text '
-        return self.read_regex(r'[A-Z][a-z]*')
+        return self.read_regex(r'[A-Z][a-z]{0-2}')
     
     # ----------------------------------------------------------------------- #
     
@@ -168,5 +197,13 @@ class StructureSource(object):
 
     # ----------------------------------------------------------------------- #
     
+    def read_Id(self):
+        ' Tries to read an ID from the source text '
+        return self.read_regex(r'[A-Z][A-Za-z0-9]*')
+
+    # ----------------------------------------------------------------------- #    
+    
+    def to_read(self):
+        print 'To read: ', self.text[self.pos:]
     
     

@@ -19,6 +19,14 @@ class Atom(object):
         self.ring = ring
         self.index = index
         
+    def copy(self):
+        print '*** Atom copied'
+        atom = Atom(self.element,
+                    self.labelled,
+                    self.ring,
+                    self.index)
+        return atom
+        
     # ---------------------------------------------------------------------- #
     
     

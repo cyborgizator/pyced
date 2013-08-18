@@ -193,6 +193,13 @@ class E(object):
         ' Returns element object by its name '
         return getattr(cls, name)
     
+    # ----------------------------------------------------------------------- #
+    
+    @classmethod
+    def is_element(cls, name):
+        ' Checks if given name relates to some element '
+        return hasattr(cls, name)
+    
 # =========================================================================== # 
 
 E.prepare_table()

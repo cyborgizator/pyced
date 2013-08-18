@@ -8,21 +8,28 @@ Created on 18.05.2013
 class Bond(object):
     ' Represents a chemical bond '
 
-    @classmethod
-    def create(cls, symbol, atom1, atom2):
-        ''' Creates a bond based on given bond symbol
-            @param symbol: is the symbol of bond ('-' single, '=' double etc)
-            @param atom1: first bonded atom
-            @param atom2: second bonded atom '''  
+
+    @staticmethod
+    def get(symbol):
+        ' Returns a bond type based on given bond symbol '
         bond_types = {'-':  SingleBond,
                       '=':  DoubleBond,
                       '#':  TripleBond,
                       '~':  PiBond,
                       '--': HydrogenBond,
                       '+-': PolarBond,
-                      '-+': ReversedPolarBond}        
-        if symbol in bond_types:
-            return bond_types[symbol]()
+                      '-+': ReversedPolarBond}
+        return bond_types[symbol] if symbol in bond_types else Bond
+
+    # ----------------------------------------------------------------------- #
+
+    @classmethod
+    def create(cls, symbol, atom1, atom2):
+        ''' Creates a bond based on given bond symbol
+            @param symbol: is the symbol of bond ('-' single, '=' double etc)
+            @param atom1: first bonded atom
+            @param atom2: second bonded atom '''
+        return cls.get(symbol)(atom1, atom2)
     
     # ----------------------------------------------------------------------- #
 

@@ -5,25 +5,14 @@ Created on 15.05.2013
 @author: Alexey Bright
 '''
 
-from graph import Graph
-
 class Structure(object):
     ' Represents a chemical structure '
 
-    def __init__(self, generator):
+
+    def __init__(self):
         ' Constructs a structure object '
-        self.graph = Graph()
-    
-    # ----------------------------------------------------------------------- #
+        pass
         
     def create_definition(self):
         ' Returns a chemical structure definition '
         pass
-    
-    # ----------------------------------------------------------------------- #
-    
-    def canonicalize(self):
-        ' Canonicalizes the molecular graph '
-        pass
-    
-    # ----------------------------------------------------------------------- #
