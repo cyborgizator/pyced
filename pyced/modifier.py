@@ -7,7 +7,7 @@ Created on 14.08.2013
 
 from atom import Atom
 from element import E
-from bond import SingleBond, PiBond
+from bond import SingleBond, DoubleBond, PiBond
 from mol_graph import MolGraph, order_edge
 from helpers import map_subclasses
 
@@ -15,15 +15,15 @@ class Modifier(object):
     ' Represents a modifier ' 
 
     @classmethod
-    def create(cls, name, arg = None):
+    def create(cls, name, **args):
         if name in cls.modifiers:
-            return cls.modifiers[name](arg)
+            return cls.modifiers[name](**args)
 
     # ----------------------------------------------------------------------- #
 
-    def __init__(self, arg = None):
+    def __init__(self, **args):
         ' Constructs a modifier object '
-        self.arg = arg
+        self.args = args
 
     # ----------------------------------------------------------------------- #
 
@@ -41,26 +41,28 @@ class Attach(Modifier):
     names = {'attach'}
 
     def apply(self, graph, locant):
-        ' Applies a generator output in arg to given graph using locant '
-        if isinstance(self.arg, Atom):
-            # argument is an atom
-            print 'arg: ', self.arg
-            new_graph = MolGraph({self.arg.copy()})
-        elif isinstance(self.arg, MolGraph):
-            # argument is a molecular graph
-            new_graph = self.arg
+        ''' Applies a generator output in args["branch"] to given graph using locant
+            and bond type in args["bond"] '''
+        branch = self.args['branch']
+        branch_locant = self.args['locant']
+
+        # branch is an atom
+        if isinstance(branch, Atom):
+            new_graph = MolGraph({branch.copy()})
+          
+        # branch is a molecular graph
+        elif isinstance(branch, MolGraph):
+            new_graph = branch.copy()
+            
+        # branch is a generator
         else:
-            # argument is a generator
-            new_graph = self.arg.build()
-        print 'contains:'
-        new_graph.show()
+            new_graph = branch.build()
+
         graph.attach(new_graph,
                      graph.index[locant],
-                     new_graph.index[0],
-                     SingleBond)  
-        
-        # TODO make bond based on syntax  
-    
+                     new_graph.index[branch_locant],
+                     self.args['bond'])
+
 # =========================================================================== #    
     
 class Replace(Modifier):
@@ -69,8 +71,8 @@ class Replace(Modifier):
     names = {'replace'}
     
     def apply(self, graph, locant):
-        ' Applies a generator output in arg to given graph using locant '
-        atom = self.arg
+        ' Replace locant-specified atoms in graph using atom in args["atom"] '
+        atom = self.args['atom']
         atom.ring = graph.index[locant]
         graph.replace(graph.index[locant], atom)
     
@@ -83,7 +85,10 @@ class En(Modifier):
 
     def apply(self, graph, locant):
         ' Applies the modifier to given graph using locant '
-        pass
+        a1 = graph.index[locant]
+        i = self.args.get('to', locant + 2) - 1
+        a2 = graph.index[locant]
+        graph.edges[order_edge(a1, a2)] = DoubleBond(a1, a2)
 
 # =========================================================================== #
 

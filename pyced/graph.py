@@ -17,23 +17,23 @@ class Graph(object):
             # copy given graph
             self.nodes = {n: adj.copy() for n, adj in graph.nodes.items()}
             self.edges = {(n1, n2): e for (n1, n2), e in graph.edges.items()}
-            
+
         elif isinstance(graph, set):
             # build from set of nodes
             self.nodes = {}
             self.edges = {}
             self.add_disconnected_nodes(graph)
-            
+
         elif isinstance(graph, dict):
             # build from edges dict
             self.nodes = {}
             self.edges = {}
             self.add_edges(graph)
-            
+
         else:
             print 'Incorrect input graph!!!'
-            print graph            
-    
+            print graph
+
     # ----------------------------------------------------------------------- #
     
     def add_disconnected_nodes(self, nodes):

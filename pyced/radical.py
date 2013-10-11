@@ -43,9 +43,10 @@ class Radical(object):
     def build_from_connection(r1, bond, r2):
         ' Returns a radical based on two given radicals and a chemical bond '
         radical = Radical()
-        radical.graph = r1.graph.modify(r1.locator, Attach(r2.graph))
+        radical.graph = r1.graph.modify(r1.locator,
+                                        Attach(branch = r2.graph,
+                                               bond = bond))
         return radical
-        # TODO process bond
 
     # ----------------------------------------------------------------------- #
 
@@ -67,19 +68,21 @@ class Radical(object):
         self.bond = bond
     
     # ----------------------------------------------------------------------- #
-        
-    def add_radical(self, new_radical, bond = SingleBond):
-        ' Adds a new radical '
-        self.graph.modify(self.locator, Attach(new_radical.graph))
-        # TODO process bond
+    
+    def modify(self, modifier):
+        ' Applies given modifier to the current radical '
+        self.graph.modify(self.locator, modifier)
     
     # ----------------------------------------------------------------------- #
-    
-    def attach(self, graph, bond = SingleBond):
-        ' Attaches a molecular graph, atom or generator to the radical '
-        self.graph.modify(self.locator, Attach(graph))
-        # TODO process bond
-    
+        
+    def attach(self, new_radical, bond = SingleBond):
+        ' Attaches a new radical '
+        locant = new_radical.locator.get_first()
+        self.graph.modify(self.locator,
+                          Attach(branch = new_radical.graph,
+                                 locant = locant,
+                                 bond = bond))
+
     # ----------------------------------------------------------------------- #
     
     def connect_graph(self, graph):

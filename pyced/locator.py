@@ -28,6 +28,12 @@ class Locator(object):
         return locator
 
     # ----------------------------------------------------------------------- #
+    
+    def get_first(self):
+        ' Returns the first of the locants '
+        return self.locants[0] if len(self.locants) else 0
+
+    # ----------------------------------------------------------------------- #
     # Sequence interface
     # ----------------------------------------------------------------------- #
     
@@ -48,4 +54,6 @@ class Locator(object):
     
     def __contains__(self, locant):
         return locant in self.locants    
+
+    
     

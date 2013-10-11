@@ -62,8 +62,6 @@ class Chain(Generator):
     def get_default_locant(self):
         ' Returns default locant for generated radical '
         return 0
-        
-        # TODO make bond based on syntax
 
 # =========================================================================== #
 
@@ -89,7 +87,6 @@ class Ring(Generator):
         return ag
         
         # TODO exclude repeating code for this, Chain and Arene
-        # TODO make bond based on syntax
         
     # ----------------------------------------------------------------------- #
     
@@ -112,12 +109,25 @@ class Me(Chain):
 
     names = {'Me', 'CH3'}
 
+    # ----------------------------------------------------------------------- #
+
+    def __init__(self, arg):
+        ' Constructs a generator object '
+        self.arg = 1
+
+
 # =========================================================================== #
 
 class Et(Chain):
     ' Represents an ethyl radical '
 
     names = {'Et', 'C2H5'}
+    
+    # ----------------------------------------------------------------------- #
+
+    def __init__(self, arg):
+        ' Constructs a generator object '
+        self.arg = 2
 
 # =========================================================================== #
 
@@ -125,6 +135,12 @@ class Ph(Arene):
     ' Represents a phenyl radical '
 
     names = {'Ph', 'C6H5'}
+
+    # ----------------------------------------------------------------------- #
+
+    def __init__(self, arg):
+        ' Constructs a generator object '
+        self.arg = 6
 
 # =========================================================================== #
 
@@ -145,6 +161,8 @@ class Nitro(FunctionalGroup):
     ' Represents nitro-group '
 
     names = {'NO2'}
+    
+    # TODO Implement functional groups concept
 
 # =========================================================================== #
 

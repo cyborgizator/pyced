@@ -22,10 +22,9 @@ from bond import SingleBond
 def main():
 #    app = QtGui.QApplication(sys.argv)
 
-    ss = StructureSource('O[3]-(C[1])')
+    ss = StructureSource('H-S-C#N')
     
-    # TODO process brackets around generators and radicals
-    # TODO process default locators
+    # FIX numbering
     
 #    canvas = Canvas(400, 400, "white")
 #    #canvas.interference((161, 198), (199, 235), 7)
