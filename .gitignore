@@ -1,4 +1,6 @@
 *.py[cod]
+*/.metadata/*
+*/.settings/*
 .metadata/*
 .settings/*
 
