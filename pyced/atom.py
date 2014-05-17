@@ -22,11 +22,12 @@ class Atom(object):
         self.ring = ring
         self.index = index
         if color == -1:
-            self.calculate_color()
+            self.calculate_value()
         
     # ----------------------------------------------------------------------- #
         
     def copy(self):
+        ' Returns copy of the atom '
         atom = Atom(self.element,
                     self.labelled,
                     self.ring,
@@ -36,7 +37,8 @@ class Atom(object):
     
     # ----------------------------------------------------------------------- #
     
-    def calculate_color(self):
+    def calculate_value(self):
+        ' Calculates comparison value of the atom '
         if self.element == E.H:
             self.value = 0
         else:
@@ -45,5 +47,3 @@ class Atom(object):
             if len(self.element.symbol) > 1:
                 self.value |= ord('z') - ord(self.element.symbol[1])
 
-
-            
