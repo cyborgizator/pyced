@@ -41,8 +41,8 @@ class Attach(Modifier):
     names = {'attach'}
 
     def apply(self, graph, locant):
-        ''' Applies a generator output in args["branch"] to given graph using locant
-            and bond type in args["bond"] '''
+        ''' Applies a generator output in args["branch"] to given graph using
+            locant and bond type in args["bond"] '''
         branch = self.args['branch']
         branch_locant = self.args['locant']
 
@@ -87,7 +87,7 @@ class En(Modifier):
         ' Applies the modifier to given graph using locant '
         a1 = graph.index[locant]
         i = self.args.get('to', locant + 2) - 1
-        a2 = graph.index[locant]
+        a2 = graph.index[i]
         graph.edges[order_edge(a1, a2)] = DoubleBond(a1, a2)
 
 # =========================================================================== #
