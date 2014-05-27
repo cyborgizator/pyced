@@ -23,6 +23,8 @@ class Atom(object):
         self.index = index
         if color == -1:
             self.calculate_value()
+        else:
+            self.value = -1
         
     # ----------------------------------------------------------------------- #
         
@@ -32,7 +34,8 @@ class Atom(object):
                     self.labelled,
                     self.ring,
                     self.index,
-                    self.color)
+                    0)
+        atom.value = self.value
         return atom
     
     # ----------------------------------------------------------------------- #
