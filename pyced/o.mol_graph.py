@@ -1,9 +1,9 @@
-'''
+"""
 Class representing a molecular graph
 
 Created on 07.08.2013
 @author: Alexey Bright
-'''
+"""
 
 from collections import OrderedDict
 from element import E

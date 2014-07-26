@@ -1,10 +1,6 @@
-'''
-Created on 16.05.2013
-@author: Alexey Bright
-'''
+__author__ = 'Alexey Bright'
+
 
 class StructureParseError(Exception):
-    ' Represents error of structure parsing '
+    """ Represents error of structure parsing """
     pass
-
-        

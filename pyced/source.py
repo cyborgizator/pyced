@@ -1,28 +1,21 @@
-'''
-Class, representing abstract source code
-
-Created on 01.05.2013
-@author: Bright
-'''
+__author__ = 'Alexey Bright'
 
 from token import Token
 
-###############################################################################
 
 class Source(object):
-    ' Represents abstract source code '
+    """ Represents abstract source code """
 
     def __init__(self,
                  text,
                  delimiters,
-                 white_space = [' ', '\n', '\r', '\t']):
+                 white_space = (' ', '\n', '\r', '\t')):
         self.text = text
         self.delimiters = delimiters
         self.white_space = white_space
         self.tokens = []
-        
-    # ----------------------------------------------------------------------- #
-    
+
+    # -------------------------------------------------------------------------
     def tokenize(self):
         if not self.tokens:
             current_token = ''
@@ -46,4 +39,3 @@ class Source(object):
             if current_token:
                 self.tokens.append(Token(current_token))
         return self.tokens
-    

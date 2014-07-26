@@ -1,12 +1,14 @@
-'''
+"""
 Test case for Atom
 
 Created on 17.05.2014
 @author: Bright
-'''
+"""
+
 import unittest
 from pyced.atom import Atom
 from pyced.element import E
+
 
 class AtomTest(unittest.TestCase):
 
@@ -23,10 +25,10 @@ class AtomTest(unittest.TestCase):
         atom_C = Atom(E.C)
         atom_N = Atom(E.N)
         atom_Se = Atom(E.Se)
-        self.assertEqual(atom_H.value, 0, "H value miscalculated")
-        self.assertEqual(atom_C.value, 1760, "C value miscalculated")
-        self.assertEqual(atom_N.value, 384, "N value miscalculated")
-        self.assertEqual(atom_Se.value, 245, "Se value miscalculated")
+        self.assertEqual(atom_H.value, 0)
+        self.assertEqual(atom_C.value, 1760)
+        self.assertEqual(atom_N.value, 384)
+        self.assertEqual(atom_Se.value, 245)
 
     # -------------------------------------------------------------------------
     def test_copy(self):
@@ -41,7 +43,7 @@ class AtomTest(unittest.TestCase):
                         copied_atom.ring,
                         copied_atom.index,
                         copied_atom.value)
-        self.assertEqual(original_props, copied_props, "Atom copying fail")
+        self.assertEqual(original_props, copied_props)
     
     # -------------------------------------------------------------------------
     def test_atom(self):
@@ -49,11 +51,9 @@ class AtomTest(unittest.TestCase):
                       self.atom.labelled,
                       self.atom.ring,
                       self.atom.index)
-        self.assertSequenceEqual(atom_props,
-                                 (E.C, True, True, 0),
-                                 "Atom construction invalid")
+        self.assertSequenceEqual(atom_props, (E.C, True, True, 0))
 
-###############################################################################
+# =============================================================================
 if __name__ == "__main__":
     import sys;sys.argv = ['', 'AtomTest.test_atom']
     unittest.main()

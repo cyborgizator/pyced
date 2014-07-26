@@ -1,36 +1,31 @@
-'''
-Class representing a chemical element
+__author__ = 'Alexey Bright'
 
-Created on 08.08.2013
-@author: Alexey Bright
-'''
 
 class Element(object):
-    ' Represents a chemical element '
-    
+    """ Represents a chemical element """
+
     def __init__(self, atomic_mass, oxidation):
-        ''' Constructs an element object
-            @param mass: atomic mass of the element 
-            @param oxidation: set of element's oxidation states '''
-        Element.element_count += 1
+        """ Constructs an element object
+            :param atomic_mass: atomic mass of the element
+            :param oxidation: set of element's oxidation states """
+        Element.__element_count += 1
         self.oxidation = oxidation
-        self.atomic_mass = atomic_mass 
-        self.atomic_number = Element.element_count
+        self.atomic_mass = atomic_mass
+        self.atomic_number = Element.__element_count
         self.metal = True
-        
-    # ----------------------------------------------------------------------- #
-    
+
+    # -------------------------------------------------------------------------
     def is_metal(self):
-        ' Returns True if element is a metal, False otherwise'
+        """ Returns True if element is a metal, False otherwise """
         return self.metal
-    
-    element_count = 0
-    
-# =========================================================================== #     
-    
+
+    __element_count = 0
+
+
+# =============================================================================
 class E(object):
-    ' Contains elements data '
-    
+    """ Contains elements data """
+
 # symbol      atomic mass   oxidation states
     H   = Element(1.008,    {-1, 1})
     He  = Element(4.003,    {})
@@ -140,19 +135,18 @@ class E(object):
     Sg  = Element(271.0,    {6})
     Bh  = Element(270.0,    {7})
     Hs  = Element(277.0,    {8})
-    
-    # ----------------------------------------------------------------------- #
-    
+
+    # -------------------------------------------------------------------------
     @classmethod
     def prepare_table(cls):
-        ' Prepare elements table to use '
-        cls.table = set()
+        """ Prepare elements table to use """
+        cls.__table = set()
         for s in vars(cls):
             if len(s) < 3:
                 e = getattr(cls, s)
                 e.symbol = s
-                cls.table.add(e)
-                
+                cls.__table.add(e)
+
         non_metals = {cls.H,
                       cls.He,
                       cls.B,
@@ -179,28 +173,26 @@ class E(object):
         for e in non_metals:
             e.metal = False
 
-    # ----------------------------------------------------------------------- #
-    
+    # -------------------------------------------------------------------------
     @classmethod
     def get_elements(cls):
-        ' Returns set of element objects '
-        return cls.table
-    
-    # ----------------------------------------------------------------------- #
-    
+        """ Returns set of element objects """
+        return cls.__table
+
+    # -------------------------------------------------------------------------
     @classmethod
     def get_element(cls, name):
-        ' Returns element object by its name '
+        """ Returns element object by its name """
         return getattr(cls, name)
-    
-    # ----------------------------------------------------------------------- #
-    
+
+    # -------------------------------------------------------------------------
     @classmethod
     def is_element(cls, name):
-        ' Checks if given name relates to some element '
+        """ Checks if given name relates to some element """
         return hasattr(cls, name)
-    
-# =========================================================================== # 
+
+    __table = set()
+
+# =============================================================================
 
 E.prepare_table()
-
