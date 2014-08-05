@@ -176,7 +176,7 @@ class E(object):
         for e in cls.__table:
             e.value = (ord('Z') - ord(e.symbol[0])) << 5
             if len(e.symbol) > 1:
-                value |= ord('z') - ord(e.symbol[1])
+                e.value |= ord('z') - ord(e.symbol[1])
         cls.C.value |= 1 << 10
         cls.H.value = 0
 
