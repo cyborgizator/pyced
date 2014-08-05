@@ -1,11 +1,13 @@
-'''
-Created on 30.04.2013
-@author: Alexey Bright
-'''
+__author__ = 'Alexey Bright'
 
+from molecular_graph import MolecularGraph
+
+import xml.etree.ElementTree as eee
 
 def main():
-    pass
+    mg = MolecularGraph()
+    print mg.export_to_cml("xyz")
+
 
 
 if __name__ == '__main__':

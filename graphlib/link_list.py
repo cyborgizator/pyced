@@ -20,7 +20,7 @@ class LinkList(object):
         del self.__items[link]
 
     # -------------------------------------------------------------------------
-    def get_connected_vertices(self, link):
+    def get_linked_vertices(self, link):
         """ Returns tuple of vertices for given link """
         assert link in self.__items, "Link doesn't exist"
         return self.__items[link]

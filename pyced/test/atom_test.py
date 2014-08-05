@@ -13,45 +13,16 @@ from pyced.element import E
 class AtomTest(unittest.TestCase):
 
     def setUp(self):
-        self.atom = Atom(E.C,   # element
-                         True,  # labelled
-                         True,  # ring
-                         0,     # index
-                         0)     # color
-
-    # -------------------------------------------------------------------------
-    def test_calculate_value(self):
-        atom_H = Atom(E.H)
-        atom_C = Atom(E.C)
-        atom_N = Atom(E.N)
-        atom_Se = Atom(E.Se)
-        self.assertEqual(atom_H.value, 0)
-        self.assertEqual(atom_C.value, 1760)
-        self.assertEqual(atom_N.value, 384)
-        self.assertEqual(atom_Se.value, 245)
+        self.__a = Atom(E.C)
 
     # -------------------------------------------------------------------------
     def test_copy(self):
-        copied_atom = self.atom.copy()
-        original_props = (self.atom.element,
-                          self.atom.labelled,
-                          self.atom.ring,
-                          self.atom.index,
-                          self.atom.value)
-        copied_props = (copied_atom.element,
-                        copied_atom.labelled,
-                        copied_atom.ring,
-                        copied_atom.index,
-                        copied_atom.value)
-        self.assertEqual(original_props, copied_props)
+        copied_atom = self.__a.copy()
+        self.assertEqual(self.__a.element, copied_atom.element)
     
     # -------------------------------------------------------------------------
     def test_atom(self):
-        atom_props = (self.atom.element,
-                      self.atom.labelled,
-                      self.atom.ring,
-                      self.atom.index)
-        self.assertSequenceEqual(atom_props, (E.C, True, True, 0))
+        self.assertSequenceEqual(self.__a.element, E.C)
 
 # =============================================================================
 if __name__ == "__main__":

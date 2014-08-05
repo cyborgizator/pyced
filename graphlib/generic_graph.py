@@ -42,7 +42,7 @@ class GenericGraph(object):
     # -------------------------------------------------------------------------
     def break_link(self, link):
         """ Breaks given link """
-        (v1, v2) = self.__link_list.get_connected_vertices(link)
+        (v1, v2) = self.__link_list.get_linked_vertices(link)
         self.__link_list.break_link(link)
         self.__connect_list.disconnect(v1, v2)
         self.__adjacency_list.disconnect(v1, v2)
@@ -58,9 +58,14 @@ class GenericGraph(object):
             self.__link_list.break_link(adjacent_link)
 
     # -------------------------------------------------------------------------
-    def get_connected_vertices(self, link):
+    def get_connected_vertices(self, v):
+        """ Returns set of vertices adjacent to the given one """
+        return self.__adjacency_list.get_connected_vertices(v)
+
+    # -------------------------------------------------------------------------
+    def get_linked_vertices(self, link):
         """ Returns tuple of vertices for given link """
-        return self.__link_list.get_connected_vertices(link)
+        return self.__link_list.get_linked_vertices(link)
 
     # -------------------------------------------------------------------------
     def get_adjacent_links(self, v):

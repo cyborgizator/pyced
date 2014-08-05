@@ -63,9 +63,13 @@ class GenericGraphTest(unittest.TestCase):
         self.assert_(not self.__gg.connected(self.__v1, self.__v2))
         self.assert_(not self.__gg.connected(self.__v1, self.__v3))
 
-    # -------------------------------------------------------------------------
     def test_get_connected_vertices(self):
-        self.assertEqual(self.__gg.get_connected_vertices(self.__l1),
+        self.assertEqual(self.__gg.get_connected_vertices(self.__v1),
+                         {self.__v2, self.__v3})
+
+    # -------------------------------------------------------------------------
+    def test_get_linked_vertices(self):
+        self.assertEqual(self.__gg.get_linked_vertices(self.__l1),
                          ordered_pair(self.__v1, self.__v2))
     
     # -------------------------------------------------------------------------

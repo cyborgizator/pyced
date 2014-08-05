@@ -31,7 +31,7 @@ class LinkListTest(unittest.TestCase):
     def test_connect(self):
         link = GenericLink()
         self.__ll.connect(self.__v1, self.__v2, link)
-        self.assertEqual(self.__ll.get_connected_vertices(link),
+        self.assertEqual(self.__ll.get_linked_vertices(link),
                          ordered_pair(self.__v1, self.__v2))
     
     # -------------------------------------------------------------------------
@@ -41,8 +41,8 @@ class LinkListTest(unittest.TestCase):
         self.assert_(not ordered_pair(self.__v1, self.__v2) in vertex_pairs)
     
     # -------------------------------------------------------------------------
-    def test_get_connected_vertices(self):
-        vertex_pair = self.__ll.get_connected_vertices(self.__l1)
+    def test_get_linked_vertices(self):
+        vertex_pair = self.__ll.get_linked_vertices(self.__l1)
         self.assertEqual(ordered_pair(self.__v1, self.__v2), vertex_pair)
     
     # -------------------------------------------------------------------------

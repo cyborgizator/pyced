@@ -1,6 +1,7 @@
 __author__ = 'Bright'
 
 from graphlib.generic_graph import GenericGraph
+import xml.etree.ElementTree as et
 
 
 class MolecularGraph(GenericGraph):
@@ -8,6 +9,28 @@ class MolecularGraph(GenericGraph):
 
     def __init__(self):
         super(self.__class__, self).__init__()
+
+    # -------------------------------------------------------------------------
+    def export_to_cml(self, id):
+        molecule = et.Element("molecule", {"id": id})
+        atoms = et.Element("atomArray")
+        bonds = et.Element("bondArray")
+        molecule.append(atoms)
+        molecule.append(bonds)
+
+        a1 = et.Element("atom", {"id": "H1", "elementType": "H"})
+        a2 = et.Element("atom", {"id": "Br1", "elementType": "Br"})
+        b1 = et.Element("bond", {"id": "H1Br1",
+                                 "atomRefs2": "H1 Br1",
+                                 "order": "S"})
+        # TODO: add conversion
+
+        atoms.append(a1)
+        atoms.append(a2)
+        bonds.append(b1)
+
+        # TODO: use ElementTree instead to build full xml document
+        return et.tostring(molecule)
 
     # -------------------------------------------------------------------------
     def canonicalize(self):
