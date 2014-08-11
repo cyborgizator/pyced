@@ -7,27 +7,44 @@ import xml.etree.ElementTree as et
 class MolecularGraph(GenericGraph):
     """ Represents a molecular graph """
 
+    # TODO: use composition instead of inheritance of GenericGraph
+
     def __init__(self):
         super(self.__class__, self).__init__()
 
     # -------------------------------------------------------------------------
-    def export_to_cml(self, id):
-        molecule = et.Element("molecule", {"id": id})
+    def get_atoms(self):
+        return self.get_all_vertices()
+
+    # -------------------------------------------------------------------------
+    def get_bonds(self):
+        return self.get_all_links()
+
+    # -------------------------------------------------------------------------
+    def add_bond(self, bond):
+        self.connect(bond.atom1, bond.atom2, bond)
+
+    # -------------------------------------------------------------------------
+    def export_to_cml(self, molecule_id):
+        molecule = et.Element("molecule", {"id": molecule_id})
         atoms = et.Element("atomArray")
         bonds = et.Element("bondArray")
         molecule.append(atoms)
         molecule.append(bonds)
 
-        a1 = et.Element("atom", {"id": "H1", "elementType": "H"})
-        a2 = et.Element("atom", {"id": "Br1", "elementType": "Br"})
-        b1 = et.Element("bond", {"id": "H1Br1",
-                                 "atomRefs2": "H1 Br1",
-                                 "order": "S"})
-        # TODO: add conversion
+        for atom in self.get_atoms():
+            symbol = atom.element.symbol
+            atom_node = et.Element("atom", {"id": symbol + str(atom.get_id()),
+                                            "elementType": symbol})
+            atoms.append(atom_node)
 
-        atoms.append(a1)
-        atoms.append(a2)
-        bonds.append(b1)
+        for bond in self.get_bonds():
+            a1_id = bond.atom1.element.symbol + str(bond.atom1.get_id())
+            a2_id = bond.atom2.element.symbol + str(bond.atom2.get_id())
+            bond_node = et.Element("bond", {"id": a1_id + a2_id,
+                                            "atomRefs2": a1_id + " " + a2_id,
+                                            "order": "S"})
+            bonds.append(bond_node)
 
         # TODO: use ElementTree instead to build full xml document
         return et.tostring(molecule)
