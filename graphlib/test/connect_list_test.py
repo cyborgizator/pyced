@@ -48,5 +48,4 @@ class ConnectListTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # import sys;sys.argv = ['', 'ConnectListTest.testName']
     unittest.main()

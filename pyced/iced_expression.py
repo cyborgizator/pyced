@@ -1,14 +1,16 @@
 __author__ = 'Alexey Bright'
 
 import re
+
 from locator import Locator
 from radical import Radical
 from atom import Atom
 from bond import Bond
-from generator import Generator
+from generators.generator import Generator
 from modifier import Modifier, Replace
 from element import E
 from errors import StructureParseError
+
 
 # ICED Syntax
 #

@@ -13,5 +13,4 @@ class GenericVertexTest(unittest.TestCase):
         
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'GenericVertexTest.testName']
     unittest.main()

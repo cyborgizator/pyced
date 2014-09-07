@@ -87,5 +87,4 @@ class GenericGraphTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'GenericGraphTest.testName']
     unittest.main()

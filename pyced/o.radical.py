@@ -89,7 +89,3 @@ class Radical(object):
         ' Connects given graph to the current graph '
         pass
     
-
-    
-    
-    

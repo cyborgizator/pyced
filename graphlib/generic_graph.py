@@ -17,6 +17,8 @@ class GenericGraph(object):
     # -------------------------------------------------------------------------
     def connect(self, v1, v2, link):
         """ Connects v1 and v2 vertices with link """
+        if self.connected(v1, v2):
+            self.disconnect(v1, v2)
         self.__adjacency_list.connect(v1, v2)
         self.__connect_list.connect(v1, v2, link)
         self.__link_list.connect(v1, v2, link)

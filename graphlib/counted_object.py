@@ -16,8 +16,13 @@ class CountedObject(object):
 
     # -------------------------------------------------------------------------
     def get_id(self):
-        """ Returns object's unique ID """
+        """ Returns object's ID """
         return self.__id
+
+    # -------------------------------------------------------------------------
+    def set_id(self, id_value):
+        """ Sets object's ID """
+        self.__id = id_value
     
     # -------------------------------------------------------------------------
     @classmethod

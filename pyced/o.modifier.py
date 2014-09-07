@@ -137,5 +137,3 @@ class Seco(Modifier):
 # =========================================================================== #
 
 Modifier.modifiers = map_subclasses(Modifier, vars())
-    
-    

@@ -1,9 +1,4 @@
-"""
-Test case for Atom
-
-Created on 17.05.2014
-@author: Bright
-"""
+__author__ = 'Alexey Bright'
 
 import unittest
 from pyced.atom import Atom
@@ -22,9 +17,8 @@ class AtomTest(unittest.TestCase):
     
     # -------------------------------------------------------------------------
     def test_atom(self):
-        self.assertSequenceEqual(self.__a.element, E.C)
+        self.assertEqual(self.__a.element, E.C)
 
 # =============================================================================
 if __name__ == "__main__":
-    import sys;sys.argv = ['', 'AtomTest.test_atom']
     unittest.main()

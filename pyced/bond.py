@@ -30,7 +30,7 @@ class Bond(GenericLink):
     # -------------------------------------------------------------------------
     def __init__(self, atom1, atom2):
         """ Constructs a chemical bond """
-        super(self.__class__, self).__init__()
+        GenericLink.__init__(self)
         self.atom1 = atom1
         self.atom2 = atom2
 

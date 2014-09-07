@@ -1,28 +1,48 @@
-__author__ = 'Bright'
+__author__ = 'Alexey Bright'
 
 from graphlib.generic_graph import GenericGraph
+from bond import Bond
 import xml.etree.ElementTree as et
 
 
-class MolecularGraph(GenericGraph):
+class MolecularGraph(object):
     """ Represents a molecular graph """
 
-    # TODO: use composition instead of inheritance of GenericGraph
-
     def __init__(self):
-        super(self.__class__, self).__init__()
+        self.__graph = GenericGraph()
+        self.__atom_index = {}
 
     # -------------------------------------------------------------------------
     def get_atoms(self):
-        return self.get_all_vertices()
+        return self.__graph.get_all_vertices()
 
     # -------------------------------------------------------------------------
     def get_bonds(self):
-        return self.get_all_links()
+        return self.__graph.get_all_links()
+
+    # -------------------------------------------------------------------------
+    def set_atom(self, locant, atom):
+        self.__atom_index[locant] = atom
+
+    # -------------------------------------------------------------------------
+    def replace_atom(self, locant, atom):
+        # TODO replace atom
+        pass
+
+    # -------------------------------------------------------------------------
+    def get_atom_by_locant(self, locant):
+        return self.__atom_index[locant]
 
     # -------------------------------------------------------------------------
     def add_bond(self, bond):
-        self.connect(bond.atom1, bond.atom2, bond)
+        self.__graph.connect(bond.atom1, bond.atom2, bond)
+
+    # -------------------------------------------------------------------------
+    def set_bond(self, locant1, locant2, bond_symbol):
+        atom1 = self.get_atom_by_locant(locant1)
+        atom2 = self.get_atom_by_locant(locant2)
+        bond = Bond.create(bond_symbol, atom1, atom2)
+        self.__graph.connect(atom1, atom2, bond)
 
     # -------------------------------------------------------------------------
     def export_to_cml(self, molecule_id):

@@ -57,5 +57,4 @@ class LinkListTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'LinkListTest.testName']
     unittest.main()

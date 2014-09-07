@@ -54,6 +54,3 @@ class Locator(object):
     
     def __contains__(self, locant):
         return locant in self.locants    
-
-    
-    
