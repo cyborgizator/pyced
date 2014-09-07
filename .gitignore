@@ -3,6 +3,7 @@
 */.settings/*
 .metadata/*
 .settings/*
+.idea/*
 
 # C extensions
 *.so
