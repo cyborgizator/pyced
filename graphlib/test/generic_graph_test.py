@@ -30,7 +30,13 @@ class GenericGraphTest(unittest.TestCase):
     # -------------------------------------------------------------------------
     def test_init(self):
         self.assertEqual(len(self.__gg.get_all_links()), 5)
-    
+
+    # -------------------------------------------------------------------------
+    def test_add_vertex(self):
+        v = GenericVertex()
+        self.__gg.add_vertex(v)
+        self.assertEqual(self.__gg.get_connected_vertices(v), {})
+
     # -------------------------------------------------------------------------
     def test_connect(self):
         link = GenericLink()

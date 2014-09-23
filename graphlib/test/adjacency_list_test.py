@@ -26,6 +26,12 @@ class AdjacencyListTest(unittest.TestCase):
         self.assertEqual(len(AdjacencyList().get_all_vertices()), 0)
 
     # -------------------------------------------------------------------------
+    def test_add_vertex(self):
+        v = GenericVertex()
+        self.__al.add_vertex(v)
+        self.assertEqual(self.__al.get_connected_vertices(v), {})
+
+    # -------------------------------------------------------------------------
     def test_connect(self):
         self.__al.connect(self.__v3, self.__v2)
         self.assert_(self.__al.connected(self.__v2, self.__v3))

@@ -10,6 +10,11 @@ class AdjacencyList(object):
         self.__items = {}
 
     # -------------------------------------------------------------------------
+    def add_vertex(self, v):
+        """ Adds a new vertex to the graph """
+        self.__items[v] = {}
+
+    # -------------------------------------------------------------------------
     def connect(self, v1, v2):
         """ Connects v1 and v2 vertices """
         if v1 == v2:

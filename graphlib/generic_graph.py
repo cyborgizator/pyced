@@ -15,6 +15,11 @@ class GenericGraph(object):
         self.__link_list = link_list.LinkList()
 
     # -------------------------------------------------------------------------
+    def add_vertex(self, v):
+        """ Adds a new vertex to the graph """
+        self.__adjacency_list.add_vertex(v)
+
+    # -------------------------------------------------------------------------
     def connect(self, v1, v2, link):
         """ Connects v1 and v2 vertices with link """
         if self.connected(v1, v2):

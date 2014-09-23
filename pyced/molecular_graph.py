@@ -23,6 +23,7 @@ class MolecularGraph(object):
     # -------------------------------------------------------------------------
     def set_atom(self, locant, atom):
         self.__atom_index[locant] = atom
+        self.__graph.add_vertex(atom)
 
     # -------------------------------------------------------------------------
     def replace_atom(self, locant, atom):

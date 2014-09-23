@@ -15,6 +15,7 @@ class Generator(object):
         return self.__arg
 
 
+# =============================================================================
 class FunctionalGroup(Generator):
     pass
 
