@@ -14,6 +14,5 @@ class AtomGenerator(Generator):
         mg = MolecularGraph()
         element = E.get_element(self.get_argument())
         atom = Atom(element)
-        atom.set_id(1)
         mg.set_atom(1, atom)
         return mg

@@ -7,3 +7,5 @@ class Phenyl(Arene):
 
     names = {'Ph', 'C6H5'}
 
+    def __init__(self, arg = None):
+        Arene.__init__(self, 6)

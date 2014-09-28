@@ -17,13 +17,10 @@ class Chain(Generator):
         mg = MolecularGraph()
         atom_count = int(self.get_argument())
         prev_atom = Atom(E.C)
-        prev_atom.set_id(1)
         mg.set_atom(1, prev_atom)
         for i in range(1, atom_count):
             atom = Atom(E.C)
-            atom_id = i + 1
-            atom.set_id(atom_id)
-            mg.set_atom(atom_id, atom)
+            mg.set_atom(i + 1, atom)
             mg.add_bond(SingleBond(prev_atom, atom))
             prev_atom = atom
         return mg
