@@ -6,6 +6,8 @@ from graphlib.generic_link import GenericLink
 class Bond(GenericLink):
     """ Represents a chemical bond """
 
+    CML_ORDER = "other"     # code for CML bond representation
+
     @staticmethod
     def get(symbol):
         """ Returns a bond type based on given bond symbol """
@@ -42,22 +44,26 @@ class MultipleBond(Bond):
 
 # =============================================================================
 class SingleBond(MultipleBond):
-    pass
+
+    CML_ORDER = "S"
 
 
 # =============================================================================
 class DoubleBond(MultipleBond):
-    pass
+
+    CML_ORDER = "D"
 
 
 # =============================================================================
 class TripleBond(MultipleBond):
-    pass
+
+    CML_ORDER = "T"
 
 
 # =============================================================================
 class PiBond(Bond):
-    pass
+
+    CML_ORDER = "A"
 
 
 # =============================================================================

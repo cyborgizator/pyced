@@ -8,10 +8,10 @@ class Element(object):
         """ Constructs an element object
             :param atomic_mass: atomic mass of the element
             :param oxidation: set of element's oxidation states """
-        Element.__element_count += 1
+        Element._element_count += 1
         self.oxidation = oxidation
         self.atomic_mass = atomic_mass
-        self.atomic_number = Element.__element_count
+        self.atomic_number = Element._element_count
         self.metal = True
 
     # -------------------------------------------------------------------------
@@ -19,7 +19,7 @@ class Element(object):
         """ Returns True if element is a metal, False otherwise """
         return self.metal
 
-    __element_count = 0
+    _element_count = 0
 
 
 # =============================================================================
@@ -140,12 +140,12 @@ class E(object):
     @classmethod
     def prepare_table(cls):
         """ Prepare elements table to use """
-        cls.__table = set()
+        cls._table = set()
         for s in vars(cls):
             if len(s) < 3:
                 e = getattr(cls, s)
                 e.symbol = s
-                cls.__table.add(e)
+                cls._table.add(e)
 
         non_metals = {cls.H,
                       cls.He,
@@ -172,8 +172,8 @@ class E(object):
                       cls.Rn}
         for e in non_metals:
             e.metal = False
-            
-        for e in cls.__table:
+
+        for e in cls._table:
             e.value = (ord('Z') - ord(e.symbol[0])) << 5
             if len(e.symbol) > 1:
                 e.value |= ord('z') - ord(e.symbol[1])
@@ -184,7 +184,7 @@ class E(object):
     @classmethod
     def get_elements(cls):
         """ Returns set of element objects """
-        return cls.__table
+        return cls._table
 
     # -------------------------------------------------------------------------
     @classmethod
@@ -198,7 +198,7 @@ class E(object):
         """ Checks if given name relates to some element """
         return hasattr(cls, name)
 
-    __table = set()
+    _table = set()
 
 # =============================================================================
 

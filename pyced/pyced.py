@@ -5,7 +5,7 @@ from generators.generator_factory import GeneratorFactory
 
 
 def main():
-    mg = GeneratorFactory.create('Atom', "Xe").build().export_to_cml('xenon')
+    mg = GeneratorFactory.create('CN', "CN").build().export_to_cml('nitrile')
     print mg
 
 

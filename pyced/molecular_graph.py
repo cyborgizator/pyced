@@ -9,21 +9,22 @@ class MolecularGraph(object):
     """ Represents a molecular graph """
 
     def __init__(self):
-        self.__graph = GenericGraph()
-        self.__atom_index = {}
+        self._graph = GenericGraph()
+        self._atom_index = {}
 
     # -------------------------------------------------------------------------
     def get_atoms(self):
-        return self.__graph.get_all_vertices()
+        return self._graph.get_all_vertices()
 
     # -------------------------------------------------------------------------
     def get_bonds(self):
-        return self.__graph.get_all_links()
+        return self._graph.get_all_links()
 
     # -------------------------------------------------------------------------
     def set_atom(self, locant, atom):
-        self.__atom_index[locant] = atom
-        self.__graph.add_vertex(atom)
+        atom.set_id(locant)
+        self._atom_index[locant] = atom
+        self._graph.add_vertex(atom)
 
     # -------------------------------------------------------------------------
     def replace_atom(self, locant, atom):
@@ -32,18 +33,18 @@ class MolecularGraph(object):
 
     # -------------------------------------------------------------------------
     def get_atom_by_locant(self, locant):
-        return self.__atom_index[locant]
+        return self._atom_index[locant]
 
     # -------------------------------------------------------------------------
     def add_bond(self, bond):
-        self.__graph.connect(bond.atom1, bond.atom2, bond)
+        self._graph.connect(bond.atom1, bond.atom2, bond)
 
     # -------------------------------------------------------------------------
     def set_bond(self, locant1, locant2, bond_symbol):
         atom1 = self.get_atom_by_locant(locant1)
         atom2 = self.get_atom_by_locant(locant2)
         bond = Bond.create(bond_symbol, atom1, atom2)
-        self.__graph.connect(atom1, atom2, bond)
+        self._graph.connect(atom1, atom2, bond)
 
     # -------------------------------------------------------------------------
     def export_to_cml(self, molecule_id):
@@ -64,11 +65,16 @@ class MolecularGraph(object):
             a2_id = bond.atom2.element.symbol + str(bond.atom2.get_id())
             bond_node = et.Element("bond", {"id": a1_id + a2_id,
                                             "atomRefs2": a1_id + " " + a2_id,
-                                            "order": "S"})
+                                            "order": bond.CML_ORDER})
             bonds.append(bond_node)
 
         # TODO: use ElementTree instead to build full xml document
         return et.tostring(molecule)
+
+    # -------------------------------------------------------------------------
+    def attach(self, mg, locator):
+        # TODO: implement graph attaching
+        pass
 
     # -------------------------------------------------------------------------
     def canonicalize(self):

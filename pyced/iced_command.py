@@ -22,8 +22,6 @@ __author__ = 'Alexey Bright'
 #   Make trans-bond     trans
 #   Break bond          seco
 
-
-
 class IcedCommand(object):
 
     def create_atom(self, element, locant):
