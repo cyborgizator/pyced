@@ -1,6 +1,5 @@
 __author__ = 'Alexey Bright'
 
-import generators
 from generators.generator_factory import GeneratorFactory
 
 

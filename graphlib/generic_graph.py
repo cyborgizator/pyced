@@ -92,11 +92,16 @@ class GenericGraph(object):
         return self._link_list.get_all_links()
 
     # -------------------------------------------------------------------------
-    def replace_node(self, v_old, v_new):
+    def replace_node(self, old_v, new_v):
         """ Replace vertex with the new one
-        :param v_old: vertex to be replaced
-        :param v_new: replacing vertex """
-        pass
-        # adjacency list
-        # connect list
-        # link list
+        :param old_v: vertex to be replaced
+        :param new_v: replacing vertex """
+        vertices = self._adjacency_list.get_connected_vertices(old_v)
+        self._adjacency_list.replace_vertex(old_v, new_v)
+        for v in vertices:
+            link = self._connect_list.get_link(old_v, v)
+            self._connect_list.disconnect(old_v, v)
+            self._connect_list.connect(new_v, v, link)
+            self._link_list.break_link(link)
+            self._link_list.connect(new_v, v, link)
+        # TODO: write related unit test

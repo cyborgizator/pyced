@@ -57,3 +57,15 @@ class AdjacencyList(object):
         del self._items[v]
         for vertex in vertices:
             self._items[vertex].discard(v)
+
+    # -------------------------------------------------------------------------
+    def replace_vertex(self, old_v, new_v):
+        """ Replaces vertex
+        :param old_v: vertex to be replaced
+        :param new_v: replacing vertex """
+        vertices = self.get_connected_vertices(old_v)
+        self._items[new_v] = vertices
+        del self._items[old_v]
+        for vertex in vertices:
+            self._items[vertex].discard(old_v)
+            self._items[vertex].add(new_v)

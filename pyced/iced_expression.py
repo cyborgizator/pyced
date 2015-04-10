@@ -7,6 +7,7 @@ from radical import Radical
 from atom import Atom
 from bond import Bond
 from generators.generator import Generator
+from generators.generator_factory import GeneratorFactory
 from modifier import Modifier, Replace
 from element import E
 from errors import StructureParseError
@@ -142,10 +143,10 @@ class IcedExpression(object):
             if self.read_character('['):
                 argument = self.read_number()
                 if argument and self.read_character(']'):
-                    return Generator.create(gid, int(argument))
+                    return GeneratorFactory.create(gid, int(argument))
                 raise StructureParseError
             else:
-                return Generator.create(gid)
+                return GeneratorFactory.create(gid)
         return False
 
     # -------------------------------------------------------------------------
@@ -180,7 +181,7 @@ class IcedExpression(object):
             if self.read_character(','):
                 tail_locator = self.read_locator()
                 if tail_locator:
-                    locator.append(tail_locator)
+                    locator.add_locant(tail_locator)
             return locator
         self.pos = original_pos
         return False

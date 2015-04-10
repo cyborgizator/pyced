@@ -35,4 +35,3 @@ class ConnectList(object):
             "Vertices aren't connected"
         return self._items[ordered_pair(v1, v2)]
 
-

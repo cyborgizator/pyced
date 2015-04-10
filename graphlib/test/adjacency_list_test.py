@@ -70,6 +70,16 @@ class AdjacencyListTest(unittest.TestCase):
         self.assertNotIn(self._v3, self._al.get_connected_vertices(self._v1))
         self.assertNotIn(self._v3, self._al.get_connected_vertices(self._v4))
 
+    # -------------------------------------------------------------------------
+    def test_replace_vertex(self):
+        new_v = GenericVertex()
+        self._al.replace_vertex(self._v3, new_v)
+        self.assertNotIn(self._v3, self._al.get_all_vertices())
+        self.assertNotIn(self._v3, self._al.get_connected_vertices(self._v1))
+        self.assertNotIn(self._v3, self._al.get_connected_vertices(self._v4))
+        self.assert_(self._al.connected(new_v, self._v1))
+        self.assert_(self._al.connected(new_v, self._v4))
+
 
 if __name__ == "__main__":
     unittest.main()

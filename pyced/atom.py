@@ -1,7 +1,6 @@
 __author__ = 'Alexey Bright'
 
 from graphlib.generic_vertex import GenericVertex
-from element import E
 
 
 class Atom(GenericVertex):
