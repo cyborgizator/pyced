@@ -8,7 +8,7 @@ from atom import Atom
 from bond import Bond
 from generators.generator import Generator
 from generators.generator_factory import GeneratorFactory
-from modifier import Modifier, Replace
+from modifiers.modifier import Modifier, Replace
 from element import E
 from errors import StructureParseError
 

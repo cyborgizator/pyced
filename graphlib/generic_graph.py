@@ -15,6 +15,11 @@ class GenericGraph(object):
         self._link_list = link_list.LinkList()
 
     # -------------------------------------------------------------------------
+    def get_vertex_count(self):
+        """ Returns number of the vertices """
+        return self._adjacency_list.get_vertex_count()
+
+    # -------------------------------------------------------------------------
     def add_vertex(self, v):
         """ Adds a new vertex to the graph """
         self._adjacency_list.add_vertex(v)
@@ -104,4 +109,4 @@ class GenericGraph(object):
             self._connect_list.connect(new_v, v, link)
             self._link_list.break_link(link)
             self._link_list.connect(new_v, v, link)
-        # TODO: write related unit test
+

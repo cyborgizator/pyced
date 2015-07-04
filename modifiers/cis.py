@@ -3,10 +3,10 @@ __author__ = 'Alexey Bright'
 from modifiers.modifier import Modifier
 
 
-class En(Modifier):
-    """ Represents double bond """
+class Cis(Modifier):
+    """ Represents cis-bond """
 
-    names = {'en'}
+    names = {'cis'}
 
     def apply(self):
         """ Applies modifier to the molecular graph """

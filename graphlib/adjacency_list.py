@@ -10,6 +10,11 @@ class AdjacencyList(object):
         self._items = {}
 
     # -------------------------------------------------------------------------
+    def get_vertex_count(self):
+        """ Returns number of the vertices """
+        return len(self._items)
+
+    # -------------------------------------------------------------------------
     def add_vertex(self, v):
         """ Adds a new vertex to the graph """
         self._items[v] = set()

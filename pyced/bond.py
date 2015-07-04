@@ -11,14 +11,15 @@ class Bond(GenericLink):
     @staticmethod
     def get(symbol):
         """ Returns a bond type based on given bond symbol """
-        bond_types = {'-':  SingleBond,
-                      '=':  DoubleBond,
-                      '#':  TripleBond,
-                      '~':  PiBond,
-                      '--': HydrogenBond,
-                      '+-': PolarBond,
-                      '-+': ReversedPolarBond}
-        return bond_types[symbol] if symbol in bond_types else Bond
+        bond_set = (SingleBond,
+                    DoubleBond,
+                    TripleBond,
+                    PiBond,
+                    HydrogenBond,
+                    PolarBond,
+                    ReversedPolarBond)
+        bond_map = {bond_type.SYMBOL: bond_type for bond_type in bond_set}
+        return bond_map[symbol] if symbol in bond_map else Bond
 
     # -------------------------------------------------------------------------
     @classmethod
@@ -46,36 +47,43 @@ class MultipleBond(Bond):
 class SingleBond(MultipleBond):
 
     CML_ORDER = "S"
+    SYMBOL = "-"
 
 
 # =============================================================================
 class DoubleBond(MultipleBond):
 
     CML_ORDER = "D"
+    SYMBOL = "="
 
 
 # =============================================================================
 class TripleBond(MultipleBond):
 
     CML_ORDER = "T"
+    SYMBOL = "#"
 
 
 # =============================================================================
 class PiBond(Bond):
 
     CML_ORDER = "A"
+    SYMBOL = "~"
 
 
 # =============================================================================
 class HydrogenBond(Bond):
-    pass
+
+    SYMBOL = "--"
 
 
 # =============================================================================
 class PolarBond(Bond):
-    pass
+
+    SYMBOL = "+-"
 
 
 # =============================================================================
 class ReversedPolarBond(Bond):
-    pass
+
+    SYMBOL = "-+"
