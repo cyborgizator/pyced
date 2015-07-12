@@ -34,6 +34,42 @@ class MolecularGraphTest(unittest.TestCase):
         self.assertIn(atom, self._mg.get_atoms())
         self.assertIn(bond, self._mg.get_bonds())
 
+    # -------------------------------------------------------------------------
+    def test_get_atom_count(self):
+        self.assertEqual(self._mg.get_atom_count(), 2)
+
+    # -------------------------------------------------------------------------
+    def test_get_atom_by_locant(self):
+        self.assertEqual(self._a1, self._mg.get_atom_by_locant(1))
+        self.assertEqual(self._a2, self._mg.get_atom_by_locant(2))
+
+    # -------------------------------------------------------------------------
+    def test_set_atom(self):
+        atom = Atom(E.O)
+        self._mg.set_atom(3, atom)
+        self.assertEqual(self._mg.get_atom_count(), 3)
+        self.assertEqual(self._mg.get_atom_by_locant(3), atom)
+
+    # -------------------------------------------------------------------------
+    def test_add_atom(self):
+        atom = Atom(E.O)
+        self._mg.add_atom(atom)
+        self.assertEqual(self._mg.get_atom_count(), 3)
+        self.assertEqual(self._mg.get_atom_by_locant(3), atom)
+
+    # -------------------------------------------------------------------------
+    def test_replace_atom(self):
+        atom = Atom(E.Br)
+        self._mg.replace_atom(2, atom)
+        self.assertEqual(self._mg.get_atom_count(), 2)
+        self.assertEqual(self._mg.get_atom_by_locant(2), atom)
+
+    # -------------------------------------------------------------------------
+    def test_get_brutto_formula(self):
+        # TODO: make more complex, including C atoms and indices
+        self.assertEqual(self._mg.get_brutto_formula(), "HCl")
+
+
 # =============================================================================
 if __name__ == "__main__":
     unittest.main()

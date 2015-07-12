@@ -9,26 +9,34 @@ class MolecularGraph(object):
     """ Represents a molecular graph """
 
     def __init__(self):
+        """ Constructs an empty molecular graph """
         self._graph = GenericGraph()
         self._atom_index = {}
         self._next_locant = 1
-        self.brutto_formula = ''
+        self._brutto_formula = ''
         self.modified = True
 
     # -------------------------------------------------------------------------
     def get_atom_count(self):
+        """ Returns number of the atoms in the molecular graph """
         return self._graph.get_vertex_count()
 
     # -------------------------------------------------------------------------
     def get_atoms(self):
+        """ Returns set of all the atoms in the molecular graph """
         return self._graph.get_all_vertices()
 
     # -------------------------------------------------------------------------
     def get_bonds(self):
+        """ Returns set of all the bonds in the molecular graph """
         return self._graph.get_all_links()
 
     # -------------------------------------------------------------------------
     def set_atom(self, locant, atom):
+        """ Sets the atom specified by locant
+            :param locant: placement for the atom to be set
+            :param atom: atom to be set
+        """
         atom.set_id(locant)
         self._atom_index[locant] = atom
         self._graph.add_vertex(atom)
@@ -36,8 +44,8 @@ class MolecularGraph(object):
     # -------------------------------------------------------------------------
     def add_atom(self, atom):
         """ Adds given atom with the next locant
-        :param atom: atom to be added
-        :return: next locant value
+            :param atom: atom to be added
+            :return: next locant value
         """
         self.set_atom(self._next_locant, atom)
         self._next_locant += 1
@@ -45,24 +53,49 @@ class MolecularGraph(object):
 
     # -------------------------------------------------------------------------
     def replace_atom(self, locant, atom):
-        # TODO test it
+        """ Replaces the atom specified be locant with another one
+            :param locant: placement for atom to be replaced
+            :param atom: the new atom
+        """
         self._graph.replace_node(self.get_atom_by_locant(locant), atom)
         self._atom_index[locant] = atom
 
     # -------------------------------------------------------------------------
     def get_atom_by_locant(self, locant):
+        """ Returns the atom specified by locant
+            :param locant: placement for atom to be returned
+            :return: specified atom
+        """
         return self._atom_index[locant]
 
     # -------------------------------------------------------------------------
     def add_bond(self, bond):
+        """ Adds given bond to the molecular graph
+            :param bond: bond object, referring to the two atoms
+        """
         self._graph.connect(bond.atom1, bond.atom2, bond)
 
     # -------------------------------------------------------------------------
     def set_bond(self, locant1, locant2, bond_symbol):
+        """ Creates a bond between atoms specified by given locants
+            :param locant1: placement of the first atom
+            :param locant2: placement of the second atom
+            :param bond_symbol: bond type
+        """
         atom1 = self.get_atom_by_locant(locant1)
         atom2 = self.get_atom_by_locant(locant2)
         bond = Bond.create(bond_symbol, atom1, atom2)
         self._graph.connect(atom1, atom2, bond)
+
+    # -------------------------------------------------------------------------
+    def attach(self, locant, other):
+        """ Attaches given molecular graph to the current one
+            :param locant: place to attach molecular graph
+            :param other: molecular graph to be attached
+        """
+        # TODO: implement it
+        # TODO: test it
+        pass
 
     # -------------------------------------------------------------------------
     def get_brutto_formula(self):
@@ -92,6 +125,6 @@ class MolecularGraph(object):
             others = reduce(lambda b, (e, c): b + e + m_ind(c),
                             other_counts.items(),
                             "")
-            self.brutto_formula = c_part + h_part + others
+            self._brutto_formula = c_part + h_part + others
             self.modified = False
-        return self.brutto_formula
+        return self._brutto_formula
