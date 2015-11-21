@@ -6,9 +6,9 @@ from locator import Locator
 from radical import Radical
 from atom import Atom
 from bond import Bond
-from generators.generator import Generator
 from generators.generator_factory import GeneratorFactory
-from modifiers.modifier import Modifier, Replace
+from modifiers.modifier import Modifier
+from modifiers.replace import Replace
 from element import E
 from errors import StructureParseError
 
@@ -121,11 +121,11 @@ class IcedExpression(object):
             self.read_tail(radical)
 
         # T may be a locator with following radical and Tail-expression
-        bond = self.read_bond()
-        if bond:
+        bond_type = self.read_bond()
+        if bond_type:
             r = self.read_radical()
             if r:
-                radical.attach(r, bond)
+                radical.attach_radical(r, bond_type=bond_type)
             else:
                 raise StructureParseError
 

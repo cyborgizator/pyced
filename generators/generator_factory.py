@@ -1,5 +1,6 @@
 __author__ = 'Alexey Bright'
 
+from element import E
 
 class GeneratorFactory(object):
 
@@ -10,6 +11,9 @@ class GeneratorFactory(object):
         if name in cls.generators:
             generator_class = cls.generators[name]
             return generator_class(arg)
+        elif E.is_element(name):
+            generator_class = cls.generators["Atom"]
+            return generator_class(name)
 
     # -------------------------------------------------------------------------
     @classmethod

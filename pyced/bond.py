@@ -6,6 +6,7 @@ from graphlib.generic_link import GenericLink
 class Bond(GenericLink):
     """ Represents a chemical bond """
 
+    # TODO: move CML-related attributes to CML traits
     CML_ORDER = "other"     # code for CML bond representation
 
     @staticmethod

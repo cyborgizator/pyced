@@ -4,6 +4,7 @@ from collections import OrderedDict
 from graphlib.generic_graph import GenericGraph
 from bond import Bond
 from element import E
+from atom import Atom
 
 class MolecularGraph(object):
     """ Represents a molecular graph """
@@ -22,6 +23,16 @@ class MolecularGraph(object):
         return self._graph.get_vertex_count()
 
     # -------------------------------------------------------------------------
+    def get_neighbors_count(self, atom):
+        """ Returns number of the adjacent bonds by given atom """
+        return self._graph.get_connected_vertices_count(atom)
+
+    # -------------------------------------------------------------------------
+    def get_neighbors(self, atom):
+        """ Returns set of connected atoms by the given one """
+        return self._graph.get_connected_vertices(atom)
+
+    # -------------------------------------------------------------------------
     def get_atoms(self):
         """ Returns set of all the atoms in the molecular graph """
         return self._graph.get_all_vertices()
@@ -32,12 +43,19 @@ class MolecularGraph(object):
         return self._graph.get_all_links()
 
     # -------------------------------------------------------------------------
+    def get_latest_locant(self):
+        """ Returns the latest locant """
+        return self._next_locant - 1
+
+    # -------------------------------------------------------------------------
     def set_atom(self, locant, atom):
         """ Sets the atom specified by locant
             :param locant: placement for the atom to be set
             :param atom: atom to be set
         """
         atom.set_id(locant)
+        if locant >= self._next_locant:
+            self._next_locant = locant + 1
         self._atom_index[locant] = atom
         self._graph.add_vertex(atom)
 
@@ -48,7 +66,6 @@ class MolecularGraph(object):
             :return: next locant value
         """
         self.set_atom(self._next_locant, atom)
-        self._next_locant += 1
         return self._next_locant
 
     # -------------------------------------------------------------------------
@@ -88,14 +105,29 @@ class MolecularGraph(object):
         self._graph.connect(atom1, atom2, bond)
 
     # -------------------------------------------------------------------------
-    def attach(self, locant, other):
-        """ Attaches given molecular graph to the current one
-            :param locant: place to attach molecular graph
+    def attach_molecular_graph(self,
+                               locant_from,
+                               other,
+                               locant_to,
+                               bond_symbol):
+        """ Attaches given molecular graph to the current one (move contents)
+            :param locant_from: place to attach molecular graph
             :param other: molecular graph to be attached
+            :param locant_to: place in other graph to attach it
+            :param bond_symbol:
         """
-        # TODO: implement it
         # TODO: test it
-        pass
+        # TODO: re-implement in GenericGraph (?)
+        # TODO: replace bond_symbol parameter to bond_type (?)
+        atom_from = self.get_atom_by_locant(locant_from)
+        atom_to = other.get_atom_by_locant(locant_to)
+        for a in range(1, other.get_atom_count() + 1):
+            self.add_atom(other.get_atom_by_locant(a))
+
+        for b in other.get_bonds():
+            self.add_bond(b)
+        bond = Bond.create(bond_symbol, atom_from, atom_to)
+        self._graph.connect(atom_from, atom_to, bond)
 
     # -------------------------------------------------------------------------
     def get_brutto_formula(self):

@@ -50,6 +50,12 @@ class AdjacencyList(object):
         return self._items[v]
 
     # -------------------------------------------------------------------------
+    def get_connected_vertices_count(self, v):
+        """ Returns number of the connected vertices by given vertex """
+        # TODO: write unit test
+        return len(self._items[v])
+
+    # -------------------------------------------------------------------------
     def get_all_vertices(self):
         """ Return set of all the vertices """
         return set(self._items.keys())

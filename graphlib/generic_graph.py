@@ -75,6 +75,11 @@ class GenericGraph(object):
         return self._adjacency_list.get_connected_vertices(v)
 
     # -------------------------------------------------------------------------
+    def get_connected_vertices_count(self, v):
+        """ Returns number of the connected vertices by given vertex """
+        return self._adjacency_list.get_connected_vertices_count(v)
+
+    # -------------------------------------------------------------------------
     def get_linked_vertices(self, link):
         """ Returns tuple of vertices for given link """
         return self._link_list.get_linked_vertices(link)

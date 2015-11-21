@@ -177,8 +177,8 @@ class E(object):
             e.value = (ord('Z') - ord(e.symbol[0])) << 5
             if len(e.symbol) > 1:
                 e.value |= ord('z') - ord(e.symbol[1])
-        cls.C.value |= 1 << 10
-        cls.H.value = 0
+        cls.H.value |= 1 << 10
+        cls.C.value = 0
 
     # -------------------------------------------------------------------------
     @classmethod
