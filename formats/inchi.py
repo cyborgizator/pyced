@@ -1,6 +1,7 @@
+from generic_format import GenericFormat
+
 __author__ = 'Alexey Bright'
 
-from generic_format import GenericFormat
 
 class InChI(GenericFormat):
 
@@ -10,8 +11,8 @@ class InChI(GenericFormat):
         self._current_choice = 0
 
         # .....................................................................
-        def print_colored_list(colored_atoms):
-            for color, atom in colored_atoms:
+        def print_colored_list(atoms):
+            for color, atom in atoms:
                 print color, ":", atom.element.symbol, ", ",
             print
 
@@ -28,9 +29,9 @@ class InChI(GenericFormat):
                     for a in self._mg.get_atoms()]
 
         # .....................................................................
-        def lexicographical_reassign_colors(colored_atoms):
+        def lexicographical_reassign_colors(atoms):
             """ Translates color lists into the new colors """
-            sorted_atoms = sorted(colored_atoms, key=lambda item: item[0])
+            sorted_atoms = sorted(atoms, key=lambda item: item[0])
             prev_color = None
             new_color = 0
             recolored_atoms = []
@@ -49,58 +50,123 @@ class InChI(GenericFormat):
             return recolored_atoms
 
         # .....................................................................
-        def assign_colored_atoms(colored_atoms):
+        def assign_colored_atoms(atoms):
             """ Creates color lists based on atoms connectivity """
             colored = []
-            for color, atom in colored_atoms:
+            for color, atom in atoms:
                 linked_colors = sorted(c for c in self._mg.get_neighbors(atom))
                 colored.append((color,) + tuple(linked_colors))
             return colored
 
         # .....................................................................
-        def differentiate_colors(colored_atoms, skips):
-            """ Makes different colors for smallest non-unique color """
-            atoms = colored_atoms[:]
-            predecessor = 0
+        def get_equal_ranges(atoms):
+            """
+                Returns ranges of equal color indices
+                :param atoms: colored atoms list
+                :return: list of equal color ranges
+            """
+            equal_ranges = {}
             previous = None
-            count = skips
-            index = -1
-            for color, atom in colored_atoms:
-                if color == previous:
-                    # TODO: fix non-unique enumeration
-                    if count == 0:
-                        atoms[index] = (predecessor + 1, atoms[index][1])
-                        break
-                    else:
-                        count -= 1
-                        index += 1
-                        continue
+            index = 0
+            count = 1
+            for color, _ in atoms:
+                if color != previous:
+                    if count > 1:
+                        equal_ranges[index - count] = count
+                    count = 1
                 else:
-                    predecessor = previous
+                    count += 1
                 previous = color
                 index += 1
-            return atoms
+            if count > 1:
+                equal_ranges[index - count] = count
+            return equal_ranges
 
         # .....................................................................
-        def check_colors_uniqueness(colored_atoms):
+        def get_connected_colors(atom, atoms):
+            """
+                Returns colors list of all the atoms connected to the given one
+                if these colors are smaller than color of the given one
+                :param atom: atom to find connected atoms to
+                :param atoms: colored atoms list
+                :return: colors list
+            """
+            # TODO: implement it
+
+            self._mg.get_connected_vertices(atom)
+
+            pass
+
+        # .....................................................................
+        def build_connection_table(atoms):
+            """
+                Builds connection table for differently colored atoms
+                :param atoms: colored atoms list
+                :return: connection table
+            """
+            table = []
+            for color, atom in atoms:
+                table.append(color)
+                table += get_connected_colors(atom, atoms)
+            return table
+
+        # .....................................................................
+        def get_smallest_connection_table(atoms):
+            """
+                Differentiates colors by all possible ways to create
+                respective connection tables
+                :param atoms: colored atoms list
+                :return: smallest connection table
+            """
+            equal_ranges = get_equal_ranges(atoms)
+            if len(equal_ranges) == 0:
+                return build_connection_table(atoms)
+
+            smallest_table = None
+            for index, count in equal_ranges:
+                for i in range(count):
+                    current_atoms = atoms[:]
+                    differentiate_colors(current_atoms, i)
+                    table = get_smallest_connection_table(current_atoms)
+                    if smallest_table is None or table < smallest_table:
+                        smallest_table = table
+
+            return smallest_table
+
+        # .....................................................................
+        def differentiate_colors(atoms, skips=0):
+            predecessor = 0
+            previous = 0
+            index = -1
+            for color, atom in atoms:
+                if color == previous:
+                    if skips == 0:
+                        atoms[index] = (predecessor + 1, atoms[index][1])
+                        print(atoms)
+                        return index
+                    else:
+                        skips -= 1
+                predecessor = previous
+                previous = color
+                index += 1
+            return -1
+
+        # .....................................................................
+        def are_colors_unique(atoms):
             """ Checks if all the colors in the list are different """
+            # TODO: remove it
             previous = None
-            for color, _ in colored_atoms:
+            for color, _ in atoms:
                 if color == previous:
                     return False
                 previous = color
             return True
 
-        atoms = [(1, "a"), (2, "b"), (3, "c"), (5, "d"), (5, "e"), (7, "f"), (7, "g")]
+        aa = [(2, "a"), (2, "b"), (3, "c"), (5, "d"), (5, "e"), (8, "f"), (8, "g"), (8, "h")]
 
         # Test
-        print "Original:", atoms
-        print "  Next 0:", differentiate_colors(atoms, 0)
-        print "  Next 1:", differentiate_colors(atoms, 1)
-        print "  Next 2:", differentiate_colors(atoms, 2)
-        print "  Next 3:", differentiate_colors(atoms, 3)
-        print "  Next 4:", differentiate_colors(atoms, 4)
-        print "  Next 5:", differentiate_colors(atoms, 5)
+        print "Original:", aa
+        print get_equal_ranges(aa[:])
         return
 
 

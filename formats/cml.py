@@ -1,7 +1,7 @@
-__author__ = 'Alexey Bright'
-
 from generic_format import GenericFormat
 import xml.etree.ElementTree as et
+
+__author__ = 'Alexey Bright'
 
 
 class Cml(GenericFormat):
